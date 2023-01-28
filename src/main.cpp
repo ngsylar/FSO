@@ -39,7 +39,7 @@ void processInstantiator(std::vector<std::vector<std::string>> parsedProcesses, 
 }
 // Cria o vetor de disk a partir do tamanho e dos files iniciais onde quem criou é -1
 std::vector<std::pair<std::string,int>> diskInstantiator(int size, std::vector<std::vector<std::string>> parsedFiles){
-    std::vector<std::pair<std::string,int>> f(size);
+    std::vector<std::pair<std::string,int>> f(size, {0, -1});
     for(int i = 0; i<(int)parsedFiles.size(); i++){
         int start = std::stoi(parsedFiles[i][1]);
         int size = std::stoi(parsedFiles[i][2]);
@@ -49,7 +49,7 @@ std::vector<std::pair<std::string,int>> diskInstantiator(int size, std::vector<s
     }
     return f;
 }
-// retorna o arquivo de files.txt em uma tupla de {size, occupied, operações, inicialização}
+// retorna o arquivo de files.txt em uma tupla de {size, operações, inicialização}
 std::tuple<int, std::vector<std::vector<std::string>>, std::vector<std::vector<std::string>>> parseFiles(std::string filesPath){
     int size;
     int occupied;
