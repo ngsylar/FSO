@@ -103,7 +103,7 @@ int main(int argc, char *argv[]){
 
     std::tuple<int, std::vector<std::vector<std::string>>, std::vector<std::vector<std::string>>> parsedFiles = parseFiles(file_name);
 
-    std::vector<std::string> disk = diskInstantiator(std::get<0>(parsedFiles), std::get<2>(parsedFiles));
+    std::vector<std::pair<std::string,int>> disk = diskInstantiator(std::get<0>(parsedFiles), std::get<2>(parsedFiles));
 
 
     
