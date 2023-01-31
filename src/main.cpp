@@ -1,24 +1,5 @@
-#include<vector>
-#include<string>
-#include "process.h"
-#include<fstream>
-#include<iostream>
-#include<regex>
+#include "solibraries.h"
 
-std::vector<std::string> split(std::string s,std::string separator){
-    std::vector<std::string> res;
-
-    std::regex r(separator);
-
-    std::regex_token_iterator<std::string::iterator> regex_end;
-
-    std::regex_token_iterator<std::string::iterator> splitted(s.begin(), s.end(), r, -1);
-
-    while(splitted != regex_end) res.push_back(*splitted++);
-
-    return res;
-
-}
 // Recebe vetor dos processos a partir do parser e instancia eles no vetor de processos instanciados
 void processInstantiator(std::vector<std::vector<std::string>> parsedProcesses, std::vector<Process>* instantiatedProcesses){
     for(int i = 0; i<(int)parsedProcesses.size(); i++){
@@ -37,6 +18,7 @@ void processInstantiator(std::vector<std::vector<std::string>> parsedProcesses, 
     }
     return;
 }
+
 // Cria o vetor de disk a partir do tamanho e dos files iniciais onde quem criou é -1
 std::vector<std::pair<std::string,int>> diskInstantiator(int size, std::vector<std::vector<std::string>> parsedFiles){
     std::vector<std::pair<std::string,int>> f(size);
@@ -49,6 +31,7 @@ std::vector<std::pair<std::string,int>> diskInstantiator(int size, std::vector<s
     }
     return f;
 }
+
 // retorna o arquivo de files.txt em uma tupla de {size, occupied, operações, inicialização}
 std::tuple<int, std::vector<std::vector<std::string>>, std::vector<std::vector<std::string>>> parseFiles(std::string filesPath){
     int size;
@@ -81,6 +64,7 @@ std::tuple<int, std::vector<std::vector<std::string>>, std::vector<std::vector<s
     }
     return {size, parsed, parsedInit};
 }
+
 // retorna o parse do arquivo de processos;
 std::vector<std::vector<std::string>> parseProcesses(std::string processesPath){
     std::vector<std::vector<std::string>> v;
