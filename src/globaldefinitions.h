@@ -2,8 +2,9 @@
 #define GLOBAL_DEFINITIONS
 
 #include "cpplibraries.h"
+#include "process.h"
 
-inline std::vector<std::string> split(std::string s, std::string separator) {
+inline std::vector<std::string> split (std::string s, std::string separator) {
     std::vector<std::string> res;
     std::regex r(separator);
     std::regex_token_iterator<std::string::iterator> regex_end;
