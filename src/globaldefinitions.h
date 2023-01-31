@@ -1,7 +1,8 @@
 #ifndef GLOBAL_DEFINITIONS
 #define GLOBAL_DEFINITIONS
 
-#include "cpplibraries.h"
+#include "CppLibraries.h"
+#include "MemoryManager.h"
 #include "process.h"
 
 inline std::vector<std::string> split (std::string s, std::string separator) {

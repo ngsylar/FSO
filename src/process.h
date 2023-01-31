@@ -1,7 +1,7 @@
 #ifndef PROCESS_H
 #define PROCESS_H
 
-#include "cpplibraries.h"
+#include "CppLibraries.h"
 
 class Process {
     public:
