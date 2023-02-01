@@ -1,9 +1,10 @@
 #include<vector>
 #include<string>
-#include "process.h"
 #include<fstream>
 #include<iostream>
 #include<regex>
+#include "process.h"
+#include "filesystem.h"
 
 std::vector<std::string> split(std::string s,std::string separator){
     std::vector<std::string> res;
@@ -104,6 +105,9 @@ int main(int argc, char *argv[]){
     std::tuple<int, std::vector<std::vector<std::string>>, std::vector<std::vector<std::string>>> parsedFiles = parseFiles(file_name);
 
     std::vector<std::pair<std::string,int>> disk = diskInstantiator(std::get<0>(parsedFiles), std::get<2>(parsedFiles));
+    std::map<string, pair<int, int>> fileTable;
+    std::vector<pair<std::bool, std::string>> log;
+    FileSystem fs(disk, fileTable, log);
 
 
     
