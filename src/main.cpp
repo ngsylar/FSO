@@ -40,7 +40,7 @@ void processInstantiator(std::vector<std::vector<std::string>> parsedProcesses, 
 }
 // Cria o vetor de disk a partir do tamanho e dos files iniciais onde quem criou é -1
 std::vector<std::pair<std::string,int>> diskInstantiator(int size, std::vector<std::vector<std::string>> parsedFiles){
-    std::vector<std::pair<std::string,int>> f(size, {0, -1});
+    std::vector<std::pair<std::string,int>> f(size, {"0", -1});
     for(int i = 0; i<(int)parsedFiles.size(); i++){
         int start = std::stoi(parsedFiles[i][1]);
         int size = std::stoi(parsedFiles[i][2]);
@@ -105,9 +105,8 @@ int main(int argc, char *argv[]){
     std::tuple<int, std::vector<std::vector<std::string>>, std::vector<std::vector<std::string>>> parsedFiles = parseFiles(file_name);
 
     std::vector<std::pair<std::string,int>> disk = diskInstantiator(std::get<0>(parsedFiles), std::get<2>(parsedFiles));
-    std::map<string, pair<int, int>> fileTable;
-    std::vector<pair<std::bool, std::string>> log;
-    FileSystem fs(disk, fileTable, log);
+    std::vector<std::tuple<int, int, int, int, bool>> log;
+    FileSystem fs(disk, log);
 
 
     
