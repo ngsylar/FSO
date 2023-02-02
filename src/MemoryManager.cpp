@@ -5,6 +5,7 @@ MemoryManager::MemoryManager () {
     realTimeBlocksCount = 64;
     memory = std::vector<int>(blocksCount);
     segmentsBegin = new Segment(false, 0, 1024);
+    lastPid = -1;
 }
 
 MemoryManager::Segment::Segment (bool filled, int address, int size, Segment* nextSegment) {
@@ -23,16 +24,23 @@ MemoryManager::~MemoryManager () {
     } while (nextSegment != nullptr);
 }
 
-bool MemoryManager::Allocate (int pid, int blocksCount) {
+int MemoryManager::Allocate (int priority, int blocksCount) {
     Segment* currentSegment = segmentsBegin;
+
+    // editar: prioridade 0 vai pra area reservada
+
+    // busca por um segmento livre para alocacao
     while (currentSegment != nullptr) {
         if ((not currentSegment->filled) and (currentSegment->size >= blocksCount)) {
-            
+            lastPid++;
+
+            // se ha espaco suficiente para alocar memoria, preenche o espaco requisitado pelo processo
             int nextSegmentAddress = currentSegment->address + blocksCount;
             for (int i = currentSegment->address; i < nextSegmentAddress; i++)
-                memory[i] = pid;
+                memory[i] = lastPid;
             currentSegment->filled = true;
             
+            // se espaco disponivel no segmento eh maior que o requisitado, cria-se um novo segmento, livre
             if (currentSegment->size > blocksCount) {
                 int newSegmentSize = currentSegment->size - blocksCount;
                 currentSegment->size = blocksCount;
@@ -42,14 +50,38 @@ bool MemoryManager::Allocate (int pid, int blocksCount) {
                 );
                 currentSegment->nextSegment = newSegment;
             }
-            return true;
+            // retorna o pid do processo para alocacao bem sucedida
+            return lastPid;
         }
+        // se segmento esta ocupado ou se nao ha espaco suficiente, continua a busca
         currentSegment = currentSegment->nextSegment;
     }
-    return false;
+    // se busca acabou e o segmento aponta para nulo, a alocacao nao pode ser realizada
+    return -1;
 }
 
-void MemoryManager::Deallocate (int pid) {}
+bool MemoryManager::Deallocate (int pid, int address) {
+    // editar: onde fica guardado os enderecos de cada processo?
+    // na memoria, no proprio processo, no gerenciador de processos?
+
+    if (memory[address] == pid) {
+        Segment* currentSegment = segmentsBegin;
+        while (currentSegment != nullptr) {
+
+            if (currentSegment->address == address) {
+                currentSegment->filled = false;
+
+                Segment* nextSegment = currentSegment->nextSegment;
+                if (not nextSegment->filled) {
+                    currentSegment->nextSegment = nextSegment->nextSegment;
+                    delete(nextSegment);
+                }
+                return true;
+            }
+            currentSegment = currentSegment->nextSegment;
+        }
+    } return false;
+}
 
 int MemoryManager::GetSize () {
     return blocksCount;

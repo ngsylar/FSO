@@ -10,12 +10,13 @@ class MemoryManager {
         std::vector<int> memory;
         int blocksCount;
         int realTimeBlocksCount;
+        int lastPid;
     
     public:
         MemoryManager();
         ~MemoryManager();
-        bool Allocate(int pid, int blocksCount);
-        void Deallocate(int pid);
+        int Allocate(int priority, int blocksCount);
+        bool Deallocate(int pid, int address);
         int GetSize();
         int GetRealTimeSize();
         int GetUserSize();
