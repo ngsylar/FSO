@@ -108,8 +108,6 @@ int main(int argc, char *argv[]){
     std::vector<std::tuple<int, int, int, int, bool>> log;
     FileSystem fs(disk, log);
 
-
     
-
     return 0;
 }
