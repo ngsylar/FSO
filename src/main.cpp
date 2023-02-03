@@ -133,15 +133,5 @@ int main(int argc, char *argv[]){
 
     std::vector<Process> processes = processInstantiator(parsedProcesses);
 
-    std::vector<std::queue<Process>> readyProcesses(4);
-
-    
-
-
-
-
-
-    
-
     return 0;
 }

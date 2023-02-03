@@ -16,8 +16,9 @@ bool ProcessManager::insertProcess(Process process){
 void execProcess(std::vector<std::vector<Process>>* readyProcesses, int queue){
     Process tempProcess = (*readyProcesses)[queue].front();
     (*readyProcesses)[queue].erase((*readyProcesses)[queue].begin());
-    // se for realimentar a fila, incrementa o wait
-    if(tempProcess.getRemainingTime()){
+    // se ainda falta executar, aumenta o tempo de exec e realimenta a fila zerando o wait
+    if(tempProcess.getRemainingTime()-1 > 0){
+        tempProcess.updateRunTime(1);
         tempProcess.updateWait(0);
         (*readyProcesses)[tempProcess.getPriority()].push_back(tempProcess);
     }
