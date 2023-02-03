@@ -4,6 +4,7 @@
 #include<fstream>
 #include<iostream>
 #include<regex>
+#include<queue>
 
 std::vector<std::string> split(std::string s,std::string separator){
     std::vector<std::string> res;
@@ -20,7 +21,8 @@ std::vector<std::string> split(std::string s,std::string separator){
 
 }
 // Recebe vetor dos processos a partir do parser e instancia eles no vetor de processos instanciados
-void processInstantiator(std::vector<std::vector<std::string>> parsedProcesses, std::vector<Process>* instantiatedProcesses){
+std::vector<Process> processInstantiator(std::vector<std::vector<std::string>> parsedProcesses){
+    std::vector<Process> instantiatedProcesses;
     for(int i = 0; i<(int)parsedProcesses.size(); i++){
         Process p(
             i,
@@ -33,9 +35,9 @@ void processInstantiator(std::vector<std::vector<std::string>> parsedProcesses, 
             stoi(parsedProcesses[i][6]),
             stoi(parsedProcesses[i][7])
         );
-        instantiatedProcesses->push_back(p);
+        instantiatedProcesses.push_back(p);
     }
-    return;
+    return instantiatedProcesses;
 }
 // Cria o vetor de disk a partir do tamanho e dos files iniciais onde quem criou é -1
 std::vector<std::pair<std::string,int>> diskInstantiator(int size, std::vector<std::vector<std::string>> parsedFiles){
@@ -94,16 +96,49 @@ std::vector<std::vector<std::string>> parseProcesses(std::string processesPath){
     return v;
 }
 
+// void process_manager(std::vector<std::queue<Process>>* ready_processes, std::vector<bool>* u_mem, std::vector<bool>* s_mem){
+//     //loop temporario
+//     while(true){
+//         // fila de tempo real possui processo
+//         std::vector<Process>& fila = (*ready_processes)[0];
+//         if((*ready_processes)[0].size()){
+            
+//             Process aux = (*ready_processes)[0].front();
+            
+//             if(aux.getRemainingTime()-1){
+//                 aux.updateRunTime(1);
+//             }else{
+//                 aux.resetRunTime();
+//             }
+
+
+//         }
+//     }
+// }
+
 int main(int argc, char *argv[]){
     
     std::string file_name;
-
     // ultimo path é o de files
     file_name = argv[argc-1];
 
     std::tuple<int, std::vector<std::vector<std::string>>, std::vector<std::vector<std::string>>> parsedFiles = parseFiles(file_name);
 
     std::vector<std::pair<std::string,int>> disk = diskInstantiator(std::get<0>(parsedFiles), std::get<2>(parsedFiles));
+
+    // penultimo path é de processes
+    file_name = argv[argc-2];
+
+    std::vector<std::vector<std::string>> parsedProcesses = parseProcesses(file_name);
+
+    std::vector<Process> processes = processInstantiator(parsedProcesses);
+
+    std::vector<std::queue<Process>> readyProcesses(4);
+
+    
+
+
+
 
 
     
