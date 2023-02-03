@@ -12,18 +12,28 @@ ProcessManager::ProcessManager(int max_wait){
 bool ProcessManager::insertProcess(Process process){
     this->readyProcesses[process.getPriority()].push_back(process); 
 }
+// executa um processo da fila de processos e se precisar, realimenta a fila 
+void execProcess(std::vector<std::vector<Process>>* readyProcesses, int queue){
+    Process tempProcess = (*readyProcesses)[queue].front();
+    (*readyProcesses)[queue].erase((*readyProcesses)[queue].begin());
+    // se for realimentar a fila, incrementa o wait
+    if(tempProcess.getRemainingTime()){
+        tempProcess.updateWait(0);
+        (*readyProcesses)[tempProcess.getPriority()].push_back(tempProcess);
+    }
+}
+// Escolhe um processo para realizar
 void ProcessManager::cycleQueues(){
+    // Verifica fila de tempo real
     if(this->readyProcesses[0].size()){
-        Process tempProcess = this->readyProcesses[0].front();
-        this->readyProcesses[0].erase(this->readyProcesses[0].begin());
-        // se for realimentar a fila, incrementa o wait
-        if(tempProcess.getRemainingTime()){
-            tempProcess.updateWait(0);
-            this->readyProcesses[tempProcess.getPriority()].push_back(tempProcess);
-        }
+        execProcess(&this->readyProcesses, 0);
         //TODO: adicionar callback para indicar termino do processo
     }else {
-
+        for(int i = 1; i<this->readyProcesses.size(); i++){
+            if(this->readyProcesses[i].size()){
+                execProcess(&this->readyProcesses, i);
+            }
+        }
     }
 }
 void ProcessManager::updateWaits(){
