@@ -1,4 +1,4 @@
-#include "GlobalDefinitions.h"
+#include "globaldefinitions.h"
 
 // Recebe vetor dos processos a partir do parser e instancia eles no vetor de processos instanciados
 void ProcessInstantiator (std::vector<std::vector<std::string>> parsedProcesses, std::vector<Process>* instantiatedProcesses) {
@@ -16,7 +16,6 @@ void ProcessInstantiator (std::vector<std::vector<std::string>> parsedProcesses,
         );
         instantiatedProcesses->push_back(p);
     }
-    return;
 }
 
 // Cria o vetor de disk a partir do tamanho e dos files iniciais onde quem criou é -1

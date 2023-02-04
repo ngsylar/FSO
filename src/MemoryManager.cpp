@@ -1,4 +1,4 @@
-#include "GlobalDefinitions.h"
+#include "globaldefinitions.h"
 
 MemoryManager::MemoryManager () {
     blocksCount = 1024;

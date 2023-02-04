@@ -1,7 +1,7 @@
 #ifndef MEMORY_MANAGER_H
 #define MEMORY_MANAGER_H
 
-#include "CppLibraries.h"
+#include "cpplibraries.h"
 
 std::vector<int> memory;
 

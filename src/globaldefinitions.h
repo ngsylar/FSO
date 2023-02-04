@@ -1,7 +1,7 @@
 #ifndef GLOBAL_DEFINITIONS
 #define GLOBAL_DEFINITIONS
 
-#include "CppLibraries.h"
+#include "cpplibraries.h"
 #include "MemoryManager.h"
 #include "Process.h"
 

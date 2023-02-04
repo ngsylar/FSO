@@ -1,7 +1,7 @@
 #ifndef PROCESS_H
 #define PROCESS_H
 
-#include "CppLibraries.h"
+#include "cpplibraries.h"
 
 class Process {
     public:
@@ -29,6 +29,10 @@ class Process {
         int getScanReq();
         int getModemReq();
         int getDiskNum();
+        int getWait();
+        void setPriority(int new_priority);
+        void incrementWait();
+        void updateWait(int new_wait);
     private:
         int pid;
         int init_time;
@@ -40,6 +44,7 @@ class Process {
         int scan_req;
         int modem_req;
         int disk_num;
+        int wait;
 };
 
 #endif
