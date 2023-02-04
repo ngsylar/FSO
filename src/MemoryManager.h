@@ -3,23 +3,28 @@
 
 #include "CppLibraries.h"
 
+std::vector<int> memory;
+
 class MemoryManager {
     private:
         class Segment;
-        Segment* segmentsBegin;
-        std::vector<int> memory;
         int blocksCount;
         int realTimeBlocksCount;
         int lastPid;
-    
+        Segment* segmentsBegin,* segmentsUserBegin;
+        std::map<int, std::pair<int, int>> processesTable;
+
+        int GetFreeSegment(Segment* firstSegment, int blocksCount);
+
     public:
         MemoryManager();
         ~MemoryManager();
         int Allocate(int priority, int blocksCount);
-        bool Deallocate(int pid, int address);
+        bool Deallocate(int pid);
         int GetSize();
         int GetRealTimeSize();
         int GetUserSize();
+        std::map<int, std::pair<int, int>> GetProcessesTable();
 };
 
 class MemoryManager::Segment {

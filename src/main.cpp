@@ -21,7 +21,7 @@ void ProcessInstantiator (std::vector<std::vector<std::string>> parsedProcesses,
 
 // Cria o vetor de disk a partir do tamanho e dos files iniciais onde quem criou é -1
 std::vector<std::pair<std::string, int>> DiskInstantiator (int diskBlocksCount, std::vector<std::vector<std::string>> parsedFileLines) {
-    std::vector<std::pair<std::string,int>> disk(diskBlocksCount, {0, -1});
+    std::vector<std::pair<std::string,int>> disk(diskBlocksCount, {"0", -1});
 
     for(int i=0; i < (int)parsedFileLines.size(); i++){
         int start = stoi(parsedFileLines[i][1]);

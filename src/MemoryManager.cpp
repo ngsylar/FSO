@@ -4,7 +4,8 @@ MemoryManager::MemoryManager () {
     blocksCount = 1024;
     realTimeBlocksCount = 64;
     memory = std::vector<int>(blocksCount);
-    segmentsBegin = new Segment(false, 0, 1024);
+    segmentsBegin = new Segment(false, 0, 64);
+    segmentsUserBegin = new Segment(false, 64, 960);
     lastPid = -1;
 }
 
@@ -16,25 +17,28 @@ MemoryManager::Segment::Segment (bool filled, int address, int size, Segment* ne
 }
 
 MemoryManager::~MemoryManager () {
+    std::array<Segment*, 2> segmentsList = {segmentsBegin, segmentsUserBegin};
     Segment* currentSegment,* nextSegment;
-    currentSegment = segmentsBegin;
-    do {
-        nextSegment = currentSegment->nextSegment;
-        delete(currentSegment);
-    } while (nextSegment != nullptr);
+
+    for (auto& firstSegment: segmentsList) {
+        currentSegment = firstSegment;
+        do {
+            nextSegment = currentSegment->nextSegment;
+            delete(currentSegment);
+        } while (nextSegment != nullptr);
+    }
+    segmentsBegin = segmentsUserBegin = nullptr;
 }
 
-int MemoryManager::Allocate (int priority, int blocksCount) {
-    Segment* currentSegment = segmentsBegin;
+int MemoryManager::GetFreeSegment (Segment* firstSegment, int blocksCount) {
+    Segment* currentSegment = firstSegment;
 
-    // editar: prioridade 0 vai pra area reservada
-
-    // busca por um segmento livre para alocacao
+    // busca por um segmento livre para alocacao, se encontrar cria processo e o poe numa tabela
     while (currentSegment != nullptr) {
         if ((not currentSegment->filled) and (currentSegment->size >= blocksCount)) {
-            lastPid++;
+            processesTable[++lastPid] = std::make_pair(currentSegment->address, blocksCount);
 
-            // se ha espaco suficiente para alocar memoria, preenche o espaco requisitado pelo processo
+            // preenche o espaco de memoria alocado para o processo
             int nextSegmentAddress = currentSegment->address + blocksCount;
             for (int i = currentSegment->address; i < nextSegmentAddress; i++)
                 memory[i] = lastPid;
@@ -60,27 +64,39 @@ int MemoryManager::Allocate (int priority, int blocksCount) {
     return -1;
 }
 
-bool MemoryManager::Deallocate (int pid, int address) {
-    // editar: onde fica guardado os enderecos de cada processo?
-    // na memoria, no proprio processo, no gerenciador de processos?
+int MemoryManager::Allocate (int priority, int blocksCount) {
+    // se for processo em tempo real, procura segmento livre nos primeiros 64 blocos
+    if (priority == 0)
+        GetFreeSegment(segmentsBegin, blocksCount);
+    // se for processo de usuario, procura a partir do bloco 64
+    else GetFreeSegment(segmentsUserBegin, blocksCount);
+}
 
-    if (memory[address] == pid) {
-        Segment* currentSegment = segmentsBegin;
-        while (currentSegment != nullptr) {
+bool MemoryManager::Deallocate (int pid) {
+    // apaga o processo da tabela de processos
+    if (not processesTable.count(pid)) return;
+    std::pair<int, int> addressSpace = processesTable[pid];
+    processesTable.erase(pid);
 
-            if (currentSegment->address == address) {
-                currentSegment->filled = false;
+    Segment* currentSegment = segmentsBegin;
+    while (currentSegment != nullptr) {
 
-                Segment* nextSegment = currentSegment->nextSegment;
-                if (not nextSegment->filled) {
-                    currentSegment->nextSegment = nextSegment->nextSegment;
-                    delete(nextSegment);
-                }
-                return true;
+        // procura o segmento ocupado pelo processo terminado e o marca como livre
+        if (currentSegment->address == addressSpace.first) {
+            currentSegment->filled = false;
+
+            // se o proximo segmento tambem eh livre, mescla os dois segmentos
+            Segment* nextSegment = currentSegment->nextSegment;
+            if (not nextSegment->filled) {
+                currentSegment->nextSegment = nextSegment->nextSegment;
+                delete(nextSegment);
             }
-            currentSegment = currentSegment->nextSegment;
+            return true;
         }
-    } return false;
+        currentSegment = currentSegment->nextSegment;
+    }
+    // se o processo ja nao existia a principio, retorna falha
+    return false;
 }
 
 int MemoryManager::GetSize () {
@@ -93,4 +109,8 @@ int MemoryManager::GetRealTimeSize () {
 
 int MemoryManager::GetUserSize () {
     return (blocksCount - realTimeBlocksCount);
+}
+
+std::map<int, std::pair<int, int>> MemoryManager::GetProcessesTable () {
+    return processesTable;
 }
