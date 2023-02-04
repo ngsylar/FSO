@@ -3,7 +3,7 @@
 
 #include "CppLibraries.h"
 #include "MemoryManager.h"
-#include "process.h"
+#include "Process.h"
 
 inline std::vector<std::string> split (std::string s, std::string separator) {
     std::vector<std::string> res;
