@@ -1,3 +1,8 @@
+#ifndef PROCESS_H
+#define PROCESS_H
+
+#include "cpplibraries.h"
+
 class Process {
     public:
         Process();
@@ -41,3 +46,5 @@ class Process {
         int disk_num;
         int wait;
 };
+
+#endif

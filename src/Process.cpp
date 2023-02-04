@@ -1,4 +1,4 @@
-#include "Process.h"
+#include "globaldefinitions.h"
 
 Process::Process(int pid, int init_time, int priority, int exec_time, int alloc_mem_blocks, int printer_code, int scan_req, int modem_req, int disk_num)
 {
