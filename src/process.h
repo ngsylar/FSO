@@ -1,3 +1,8 @@
+#ifndef PROCESS_H
+#define PROCESS_H
+
+#include "CppLibraries.h"
+
 class Process {
     public:
         Process();
@@ -36,3 +41,5 @@ class Process {
         int modem_req;
         int disk_num;
 };
+
+#endif
