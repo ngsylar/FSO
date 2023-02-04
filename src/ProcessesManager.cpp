@@ -6,12 +6,6 @@
 #include<queue>
 #include "Process.h"
 #include "ProcessesManager.h"
-ProcessManager::ProcessManager(int max_wait){
-    this->max_wait = max_wait;
-}
-bool ProcessManager::insertProcess(Process process){
-    this->readyProcesses[process.getPriority()].push_back(process); 
-}
 // executa um processo da fila de processos e se precisar, realimenta a fila 
 void execProcess(std::vector<std::vector<Process>>* readyProcesses, int queue){
     Process tempProcess = (*readyProcesses)[queue].front();
@@ -22,6 +16,12 @@ void execProcess(std::vector<std::vector<Process>>* readyProcesses, int queue){
         tempProcess.updateWait(0);
         (*readyProcesses)[tempProcess.getPriority()].push_back(tempProcess);
     }
+}
+ProcessManager::ProcessManager(int max_wait){
+    this->max_wait = max_wait;
+}
+bool ProcessManager::insertProcess(Process process){
+    this->readyProcesses[process.getPriority()].push_back(process); 
 }
 // Escolhe um processo para realizar
 void ProcessManager::cycleQueues(){
