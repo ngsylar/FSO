@@ -1,3 +1,4 @@
+#include "filesystem.h"
 #include "globaldefinitions.h"
 
 int main (int argc, char *argv[]) {
@@ -7,9 +8,11 @@ int main (int argc, char *argv[]) {
 
     Parser::ParseInputFiles(processesFilename, filesFilename);
     Hardware::disk = Parser::DiskInstantiator(Parser::diskBlocksCount, Parser::filesDescriptor);
+    std::vector<std::tuple<int, int, int, int, bool>> log;
 
     MemoryManager memoryManager;
-    ProcessesManager processesManager(0); // editar: chutei um valor, nao sei o que deve ser passado 
+    ProcessesManager processesManager(3000);
+    FileSystem fs(Hardware::disk, log);
 
     Dispatcher::Start(&memoryManager, &processesManager);
     Dispatcher::PrintLog();

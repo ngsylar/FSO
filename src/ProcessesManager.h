@@ -12,12 +12,13 @@ class ProcessesManager {
         void updateWaits();
         void checkWait();
         int max_wait;
-        Operation cycleQueues();
+        Operation cycleQueues(IO io, FileSystem fs);
+
     public:
         // executa ciclo das filas
-        Operation run(){}
+        Operation run(IO io, FileSystem fs);
         // max wait é o tempo de espera maximo de um processo antes dele aumentar a prioridade
-        ProcessesManager(int max_wait):readyProcesses(4){}
+        ProcessesManager(int max_wait);
         // Adiciona processa em alguma das filas
         bool insertProcess(Process process);
 };
