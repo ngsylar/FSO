@@ -1,5 +1,6 @@
 #ifndef OPERATION_H
 #define OPERATION_H
+#include "cpplibraries.h"
 class Operation {
     public:
         Operation();

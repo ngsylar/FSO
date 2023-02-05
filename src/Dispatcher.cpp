@@ -20,7 +20,7 @@ void Dispatcher::Start (
         } else {
             // se nova instancia de processo chegou, tenta alocar memoria
             Process& process = instantiatedProcesses.front();
-            if (process.getInitTime() >= clock) {
+            if (process.getInitTime() <= clock) {
                 memoryManager->Allocate(&process);
 
                 // se conseguiu alocar memoria, processo eh criado
@@ -29,7 +29,7 @@ void Dispatcher::Start (
 
                 logProcesses.push_back(std::make_pair(clock, process));
                 instantiatedProcesses.erase(instantiatedProcesses.begin());
-            } else break;
+            }
         }
         // continua o processamento
         Operation operation = processesManager->run(Hardware::IOmanager, *fileSystem);
