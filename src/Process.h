@@ -15,10 +15,10 @@ class Process {
             int printer_code,
             int scan_req,
             int modem_req,
-            int disk_num);
+            int disk_num,
+            std::queue<Operation> operations
+        );
         int getRemainingTime();
-        void resetRunTime();
-        void updateRunTime(int executed_time);
         int getPid();
         int getInitTime();
         int getPriority();
@@ -30,10 +30,16 @@ class Process {
         int getModemReq();
         int getDiskNum();
         int getWait();
-        void setPriority(int new_priority);
+        bool getIO(int io);
+        bool freeIO(int io);
+        Operation run();
         void incrementWait();
         void updateWait(int new_wait);
+        void setPriority(int new_priority);
     private:
+        void resetRunTime();
+        void updateRunTime(int executed_time);
+        std::queue<Operation> operations;
         int pid;
         int init_time;
         int priority;
@@ -45,6 +51,7 @@ class Process {
         int modem_req;
         int disk_num;
         int wait;
+        Operation running_op;
 };
 
 #endif

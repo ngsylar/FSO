@@ -7,15 +7,15 @@
 #include "Process.h"
 #include "ProcessesManager.h"
 // executa um processo da fila de processos e se precisar, realimenta a fila 
-void execProcess(std::vector<std::vector<Process>>* readyProcesses, int queue){
+Operation execProcess(std::vector<std::vector<Process>>* readyProcesses, int queue){
     Process tempProcess = (*readyProcesses)[queue].front();
     (*readyProcesses)[queue].erase((*readyProcesses)[queue].begin());
     // se ainda falta executar, aumenta o tempo de exec e realimenta a fila zerando o wait
-    if(tempProcess.getRemainingTime()-1 > 0){
-        tempProcess.updateRunTime(1);
-        tempProcess.updateWait(0);
+    Operation op = tempProcess.run();
+    if(op.status == op.EXECUTING){
         (*readyProcesses)[tempProcess.getPriority()].push_back(tempProcess);
     }
+    return op;
 }
 ProcessManager::ProcessManager(int max_wait){
     this->max_wait = max_wait;

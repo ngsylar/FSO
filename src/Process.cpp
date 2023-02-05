@@ -1,6 +1,6 @@
 #include "globaldefinitions.h"
 
-Process::Process(int pid, int init_time, int priority, int exec_time, int alloc_mem_blocks, int printer_code, int scan_req, int modem_req, int disk_num)
+Process::Process(int pid, int init_time, int priority, int exec_time, int alloc_mem_blocks, int printer_code, int scan_req, int modem_req, int disk_num, std::queue<Operation> operations)
 {
     this->pid = pid;
     this->run_time = 0;
@@ -13,6 +13,7 @@ Process::Process(int pid, int init_time, int priority, int exec_time, int alloc_
     this->modem_req = modem_req;
     this->disk_num = disk_num;
     this->wait = 0;
+    this->operations = operations;
 }
 Process::Process()
 {
@@ -70,4 +71,24 @@ int Process::getModemReq(){
 }
 int Process::getDiskNum(){
     return this->disk_num;
+}
+bool Process::getIO(int id){
+    // TODO down semaforo
+}
+bool Process::freeIO(int id){
+    // TODO up semaforo
+}
+Operation Process::run(){
+    if(this->running_op.status != this->running_op.EXECUTING){
+        this->running_op = this->operations.front();
+        this->operations.pop();
+    }
+    if(this->getRemainingTime()-1 > 0){
+        this->updateRunTime(1);
+        this->updateWait(0);
+    } else {
+        if(this->running_op.status != this->running_op.FAILED){}
+            this->running_op.status = this->running_op.SUCCESS;
+        return this->running_op;
+    }
 }

@@ -5,11 +5,11 @@ class Operation {
             EXECUTING,
             SUCCESS
         };
+        operation_status status;
     private:
         int id;
         int pid;
         int type;
         int file_name;
         int file_size;
-        operation_status status;
 };
