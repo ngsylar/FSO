@@ -1,8 +1,5 @@
 #ifndef OPERATION_H
 #define OPERATION_H
-
-#include "cpplibraries.h"
-
 class Operation {
     public:
         Operation();
@@ -18,6 +15,8 @@ class Operation {
         std::string getFileName();
         int getFileSize();
         enum operation_status{
+            NONE,
+            WAITING,
             FAILED,
             EXECUTING,
             SUCCESS
@@ -31,5 +30,4 @@ class Operation {
         std::string file_name;
         int file_size;
 };
-
 #endif

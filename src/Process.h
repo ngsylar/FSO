@@ -2,6 +2,8 @@
 #define PROCESS_H
 
 #include "cpplibraries.h"
+#include "IOManager.h"
+#include "filesystem.h"
 
 class Process {
     public:
@@ -14,10 +16,9 @@ class Process {
             int printer_code,
             int scan_req,
             int modem_req,
-            int disk_num);
+            int disk_num
+        );
         int getRemainingTime();
-        void resetRunTime();
-        void updateRunTime(int executed_time);
         int getPid();
         int getInitTime();
         int getPriority();
@@ -29,10 +30,16 @@ class Process {
         int getModemReq();
         int getDiskNum();
         int getWait();
-        void setPriority(int new_priority);
+        bool getIO(IO io);
+        bool freeIO(IO io);
+        Operation run(IO io, FileSystem fs);
         void incrementWait();
         void updateWait(int new_wait);
+        void setPriority(int new_priority);
     private:
+        void resetRunTime();
+        void updateRunTime(int executed_time);
+        std::queue<Operation> operations;
         int pid;
         int init_time;
         int priority;
@@ -44,6 +51,7 @@ class Process {
         int modem_req;
         int disk_num;
         int wait;
+        Operation running_op;
     friend class MemoryManager;
 };
 
