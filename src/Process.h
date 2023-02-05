@@ -4,6 +4,7 @@
 #include "cpplibraries.h"
 #include "IOManager.h"
 #include "FileSystem.h"
+#include "Operation.h"
 
 class Process {
     public:
@@ -36,6 +37,7 @@ class Process {
         void incrementWait();
         void updateWait(int new_wait);
         void setPriority(int new_priority);
+        void insertOperation(Operation* operation);
     private:
         void resetRunTime();
         void updateRunTime(int executed_time);

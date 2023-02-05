@@ -24,8 +24,20 @@ void Dispatcher::Start (
                 memoryManager->Allocate(&process);
 
                 // se conseguiu alocar memoria, processo eh criado
-                if (process.getPid() != -1)
+                if (process.getPid() != -1) {
+                    for (int i=0; i < Parser::operationDescriptor.size(); i++)
+                        if (stoi(Parser::operationDescriptor[i][0]) == process.getPid()) {
+                            Operation op(
+                                i,
+                                stoi(Parser::operationDescriptor[i][0]),
+                                stoi(Parser::operationDescriptor[i][1]),
+                                Parser::operationDescriptor[i][2],
+                                stoi(Parser::operationDescriptor[i][3])
+                            );
+                            process.insertOperation(&op);
+                        }
                     processesManager->insertProcess(process);
+                }
 
                 logProcesses.push_back(std::make_pair(clock, process));
                 instantiatedProcesses.erase(instantiatedProcesses.begin());

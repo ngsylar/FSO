@@ -46,6 +46,11 @@ void Process::updateWait(int new_wait){
 void Process::setPriority(int new_priority){
     this->priority = new_priority;
 }
+
+void Process::insertOperation(Operation* operation) {
+    operations.push(*operation);
+}
+
 int Process::getWait(){
     return this->wait;
 }
