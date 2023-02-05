@@ -1,16 +1,12 @@
-#ifndef PROCESSESMANAGER_H
-#define PROCESSESMANAGER_H
+#ifndef PROCESSES_MANAGER_H
+#define PROCESSES_MANAGER_H
 
-#include<vector>
-#include<string>
-#include<fstream>
-#include<iostream>
-#include<regex>
-#include<queue>
+#include "cpplibraries.h"
+
 #include "Process.h"
 #include "Operation.h"
 
-class ProcessManager {
+class ProcessesManager {
     private:
         std::vector<std::vector<Process>> readyProcesses;
         void updateWaits();

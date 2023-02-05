@@ -7,7 +7,6 @@ class Process {
     public:
         Process();
         Process(
-            int pid,
             int init_time,
             int priority,
             int exec_time,
@@ -45,6 +44,7 @@ class Process {
         int modem_req;
         int disk_num;
         int wait;
+    friend class MemoryManager;
 };
 
 #endif

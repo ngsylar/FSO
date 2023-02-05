@@ -2,6 +2,7 @@
 #define MEMORY_MANAGER_H
 
 #include "cpplibraries.h"
+#include "Process.h"
 
 class MemoryManager {
     private:
@@ -17,7 +18,7 @@ class MemoryManager {
     public:
         MemoryManager();
         ~MemoryManager();
-        int Allocate(int priority, int blocksCount);
+        void Allocate(Process* process);
         bool Deallocate(int pid);
         int GetSize();
         int GetRealTimeSize();

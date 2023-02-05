@@ -3,7 +3,6 @@
 
 #include "cpplibraries.h"
 
-
 class Operation {
     public:
         Operation();
@@ -24,6 +23,7 @@ class Operation {
             SUCCESS
         };
         operation_status status;
+
     private:
         int id;
         int pid;

@@ -2,6 +2,9 @@
 #define GLOBAL_DEFINITIONS
 
 #include "cpplibraries.h"
+#include "Parser.h"
+#include "Hardware.h"
+#include "Dispatcher.h"
 #include "MemoryManager.h"
 #include "ProcessesManager.h"
 #include "Process.h"
