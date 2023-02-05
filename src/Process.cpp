@@ -15,9 +15,14 @@ Process::Process(int init_time, int priority, int exec_time, int alloc_mem_block
     this->modem_req = modem_req;
     this->disk_num = disk_num;
     this->wait = 0;
+    this->running_op = Operation(-1,-1,-1,"",-1);
+    this->running_op.status = this->running_op.NONE;
 }
 Process::Process()
 {
+}
+int Process::remainingOperations(){
+    return this->operations.size();
 }
 // zera run_time
 void Process::resetRunTime()
@@ -50,7 +55,9 @@ void Process::setPriority(int new_priority){
 void Process::insertOperation(Operation* operation) {
     operations.push(*operation);
 }
-
+Operation Process::getRunningOp(){
+    return this->running_op;
+}
 int Process::getWait(){
     return this->wait;
 }
@@ -146,7 +153,12 @@ bool Process::freeIO(IO io){
     }
     return true;
 }
-Operation Process::run(IO io, FileSystem fs){
+Operation Process::run(IO io, FileSystem& fs){
+    if(this->running_op.status != this->running_op.WAITING && this->running_op.status != this->running_op.EXECUTING){
+        this->running_op = this->operations.front();
+        this->operations.pop();
+        this->resetRunTime();
+    }
     if(this->getRemainingTime()-1 > 0){
         if(!getIO(io))
             return this->running_op;
@@ -154,7 +166,7 @@ Operation Process::run(IO io, FileSystem fs){
         this->updateWait(0);
         if(this->running_op.status == this->running_op.WAITING){
             bool res = fs.doOperation(this->running_op, this->priority);
-            if(res)
+            if(!res)
                 this->running_op.status = this->running_op.FAILED;
             else
                 this->running_op.status = this->running_op.EXECUTING;
@@ -162,13 +174,13 @@ Operation Process::run(IO io, FileSystem fs){
         return this->running_op;
     } else {
         // separa tarefa
-        Operation op = this->running_op;
-        this->running_op = this->operations.front();
-        this->operations.pop();
-        if(op.status != op.FAILED)
-            op.status = op.SUCCESS;
+        
+        // this->running_op = this->operations.front();
+        // this->operations.pop();
+        if(this->running_op.status != this->running_op.FAILED)
+            this->running_op.status = this->running_op.SUCCESS;
         this->freeIO(io);
-        return op;
+        return this->running_op;
     }
     
 }

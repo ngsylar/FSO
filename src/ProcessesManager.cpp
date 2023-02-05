@@ -1,8 +1,8 @@
 #include "ProcessesManager.h"
 
 // executa um processo da fila de processos e se precisar, realimenta a fila 
-Operation execProcess(std::vector<std::vector<Process>>* readyProcesses, int queue, IO io, FileSystem fs){
-    Process tempProcess = (*readyProcesses)[queue].front();
+Operation execProcess(std::vector<std::vector<Process>>* readyProcesses, int queue, IO io, FileSystem& fs){
+    Process& tempProcess = (*readyProcesses)[queue].front();
     Operation op;
     if(tempProcess.getPriority()){
         (*readyProcesses)[queue].erase((*readyProcesses)[queue].begin());
@@ -14,7 +14,9 @@ Operation execProcess(std::vector<std::vector<Process>>* readyProcesses, int que
     } else {
         op = tempProcess.run(io,fs);
         if(op.status != op.EXECUTING && op.status != op.WAITING){
-            (*readyProcesses)[queue].erase((*readyProcesses)[queue].begin());
+            if(!tempProcess.remainingOperations() && (tempProcess.getRunningOp().status != op.WAITING && tempProcess.getRunningOp().status != op.EXECUTING)){
+                (*readyProcesses)[queue].erase((*readyProcesses)[queue].begin());
+            }
         }
     }
     return op;
@@ -34,11 +36,11 @@ bool ProcessesManager::insertProcess(Process process){
     }
 }
 // Escolhe um processo para realizar
-Operation ProcessesManager::cycleQueues(IO io, FileSystem fs){
+Operation ProcessesManager::cycleQueues(IO io, FileSystem& fs){
     // Verifica fila de tempo real
     if(this->readyProcesses[0].size()){
         return execProcess(&(this->readyProcesses), 0, io, fs);
-    }else {
+    } else {
         for(int i = 1; i<this->readyProcesses.size(); i++){
             if(this->readyProcesses[i].size()){
                 return execProcess(&(this->readyProcesses), i, io, fs);
@@ -49,7 +51,7 @@ Operation ProcessesManager::cycleQueues(IO io, FileSystem fs){
     op.status = op.NONE;
     return op;
 }
-Operation ProcessesManager::run(IO io, FileSystem fs){
+Operation ProcessesManager::run(IO io, FileSystem& fs){
     return this->cycleQueues(io, fs);
 }
 void ProcessesManager::updateWaits(){

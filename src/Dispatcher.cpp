@@ -36,10 +36,10 @@ void Dispatcher::Start (
                                 Parser::operationDescriptor[i][2],
                                 stoi(Parser::operationDescriptor[i][3])
                             );
+                            op.status = op.WAITING;
                             process.insertOperation(&op);
-                            processesManager->insertProcess(process);
                         }
-
+                processesManager->insertProcess(process);
                 logProcesses.push_back(std::make_pair(clock, process));
                 instantiatedProcesses.erase(instantiatedProcesses.begin());
             }
