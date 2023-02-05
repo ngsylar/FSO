@@ -12,7 +12,7 @@ class ProcessesManager {
         void updateWaits();
         void checkWait();
         int max_wait;
-        void cycleQueues();
+        Operation cycleQueues();
     public:
         // executa ciclo das filas
         Operation run(){}

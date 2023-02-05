@@ -18,7 +18,7 @@ bool ProcessesManager::insertProcess(Process process){
     this->readyProcesses[process.getPriority()].push_back(process); 
 }
 // Escolhe um processo para realizar
-void ProcessesManager::cycleQueues(){
+Operation ProcessesManager::cycleQueues(){
     // Verifica fila de tempo real
     if(this->readyProcesses[0].size()){
         execProcess(&this->readyProcesses, 0);

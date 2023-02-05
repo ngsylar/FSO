@@ -5,9 +5,10 @@
 
 class Operation {
     public:
-        enum operation_status {NONE, EXECUTING, SUCCESS, FAILURE};
+        enum operation_status {NONE, WAITING, EXECUTING, SUCCESS, FAILURE};
 
         Operation(int id, int pid, int opcode, std::string file_name, int file_size);
+        operation_status status;
 
     private:
         int id;
@@ -15,7 +16,6 @@ class Operation {
         int opcode;
         std::string file_name;
         int file_size;
-        operation_status status;
 };
 
 #endif
