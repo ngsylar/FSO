@@ -139,6 +139,7 @@ bool Process::freeIO(IO io){
             io.freeSATA(this->getDiskNum());
         }
     }
+    return true;
 }
 Operation Process::run(IO io, FileSystem fs){
     if(this->getRemainingTime()-1 > 0){
@@ -153,6 +154,7 @@ Operation Process::run(IO io, FileSystem fs){
             else
                 this->running_op.status = this->running_op.EXECUTING;
         }
+        return this->running_op;
     } else {
         // separa tarefa
         Operation op = this->running_op;
@@ -163,4 +165,5 @@ Operation Process::run(IO io, FileSystem fs){
         this->freeIO(io);
         return op;
     }
+    
 }
