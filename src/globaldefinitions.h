@@ -2,8 +2,13 @@
 #define GLOBAL_DEFINITIONS
 
 #include "cpplibraries.h"
+#include "Parser.h"
+#include "Hardware.h"
+#include "Dispatcher.h"
 #include "MemoryManager.h"
+#include "ProcessesManager.h"
 #include "Process.h"
+#include "Operation.h"
 
 inline std::vector<std::string> split (std::string s, std::string separator) {
     std::vector<std::string> res;
