@@ -8,18 +8,18 @@ void Dispatcher::Start (MemoryManager* memoryManager, ProcessesManager* processe
     std::sort(instantiatedProcesses.begin(), instantiatedProcesses.end(),
         [&](Process A, Process B){ return (A.getInitTime() < B.getInitTime()); });
 
-    // editar: mudar condicao
-    while (true) {
-        while (not instantiatedProcesses.empty()) {
-            Process& process = instantiatedProcesses.front();
+//     // editar: mudar condicao
+//     while (true) {
+//         while (not instantiatedProcesses.empty()) {
+//             Process& process = instantiatedProcesses.front();
 
-            if (process.getInitTime() >= clock) {
-                memoryManager->Allocate(&process);
-                if (process.getPid() != -1)
-                    processesManager->insertProcess(process);
-                instantiatedProcesses.erase(instantiatedProcesses.begin());
-            } else break;
-        }
-        clock++;
-    }
+//             if (process.getInitTime() >= clock) {
+//                 memoryManager->Allocate(&process);
+//                 if (process.getPid() != -1)
+//                     processesManager->insertProcess(process);
+//                 instantiatedProcesses.erase(instantiatedProcesses.begin());
+//             } else break;
+//         }
+//         clock++;
+//     }
 }
