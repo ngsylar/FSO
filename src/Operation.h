@@ -15,6 +15,8 @@ class Operation {
         std::string getFileName();
         int getFileSize();
         enum operation_status{
+            NONE,
+            WAITING,
             FAILED,
             EXECUTING,
             SUCCESS
