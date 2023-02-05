@@ -1,8 +1,8 @@
 #include "globaldefinitions.h"
 
-Process::Process(int pid, int init_time, int priority, int exec_time, int alloc_mem_blocks, int printer_code, int scan_req, int modem_req, int disk_num)
+Process::Process(int init_time, int priority, int exec_time, int alloc_mem_blocks, int printer_code, int scan_req, int modem_req, int disk_num)
 {
-    this->pid = pid;
+    this->pid = -1;
     this->run_time = 0;
     this->init_time = init_time;
     this->priority = priority;

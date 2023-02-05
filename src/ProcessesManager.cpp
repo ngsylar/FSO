@@ -1,11 +1,5 @@
-#include<vector>
-#include<string>
-#include<fstream>
-#include<iostream>
-#include<regex>
-#include<queue>
-#include "Process.h"
 #include "ProcessesManager.h"
+
 // executa um processo da fila de processos e se precisar, realimenta a fila 
 void execProcess(std::vector<std::vector<Process>>* readyProcesses, int queue){
     Process tempProcess = (*readyProcesses)[queue].front();
@@ -17,14 +11,14 @@ void execProcess(std::vector<std::vector<Process>>* readyProcesses, int queue){
         (*readyProcesses)[tempProcess.getPriority()].push_back(tempProcess);
     }
 }
-ProcessManager::ProcessManager(int max_wait){
+ProcessesManager::ProcessesManager(int max_wait){
     this->max_wait = max_wait;
 }
-bool ProcessManager::insertProcess(Process process){
+bool ProcessesManager::insertProcess(Process process){
     this->readyProcesses[process.getPriority()].push_back(process); 
 }
 // Escolhe um processo para realizar
-void ProcessManager::cycleQueues(){
+void ProcessesManager::cycleQueues(){
     // Verifica fila de tempo real
     if(this->readyProcesses[0].size()){
         execProcess(&this->readyProcesses, 0);
@@ -37,7 +31,7 @@ void ProcessManager::cycleQueues(){
         }
     }
 }
-void ProcessManager::updateWaits(){
+void ProcessesManager::updateWaits(){
     // começa em 1 para ignorar fila de tempo real
     for(int i = 1; i<this->readyProcesses.size(); i++){
         for(int j = 0; j<this->readyProcesses[i].size(); j++){
@@ -47,7 +41,7 @@ void ProcessManager::updateWaits(){
     }
 }
 // Itera nas filas e gerencia as prioridades
-void ProcessManager::checkWait(){
+void ProcessesManager::checkWait(){
     for(int i = 1; i <= 3; i++){
         for(int j = 0; j < this->readyProcesses[i].size(); j++){
             // aumenta a prioridade se o tempo de espera do processo for maior que o max_wait definido
