@@ -17,7 +17,7 @@ int main (int argc, char *argv[]) {
     Dispatcher::Start(&memoryManager, &processesManager, &fs);
     Dispatcher::PrintLog();
 
-    std::cout << "AAAAAAAAAAAAAAAAAAI";
+    std::cout << "FIM";
 
     return 0;
 }

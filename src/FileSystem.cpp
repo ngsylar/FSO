@@ -3,7 +3,7 @@
 FileSystem::FileSystem(std::vector<std::pair<std::string,int>> disk, std::vector<std::tuple<int, int, int, int, bool>> log)
 {
     this->disk = disk;// disco armazena em cada posição o nome do arquivo que está alocado e o processo que o criou
-    this->log = log; // log-> int1=pid, int2=operacao, int3=momento do erro na operacao, int4=primeiro bloco, bool= falha (false) ou sucesso (true)
+    this->log = log; // log-> int1=pid, int2=operacao, int3=tipo do erro na operacao, int4=primeiro bloco, bool= falha (false) ou sucesso (true)
     
     // quando o sistema de aquivos é contruído, a tabela de arquivos é feita com base na inicialização do disco
     std::map<std::string, std::pair<int, int>> ft; // string=nome do arquivo, int1=primeira posicao, int2=tamanho do bloco
