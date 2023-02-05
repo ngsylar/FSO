@@ -41,18 +41,18 @@ int FileSystem::findOwnerOfFile(std::string fileName){
 }
 
 // método para fazer uma operação do sistem de arquivos
-std::vector<std::pair<std::string,int>> FileSystem::doOperation(std::vector<std::string> operation, int priority)
+bool FileSystem::doOperation(Operation operation, int priority)
 {
-    int pid = std::stoi(operation[0]);
-    int opCode = std::stoi(operation[1]);
-    std::string fileName = operation[2];
+    int pid = operation.getPid();
+    int opCode = operation.getOpcode();
+    std::string fileName = operation.getFileName();
     int frst;
     bool flag = false;
 
     switch(opCode){
             case 0: // 0 para criar um arquivo
             {
-                int numBlocks = std::stoi(operation[3]);
+                int numBlocks = operation.getFileSize();
                 int counter = -1;
                 for(int i=0; i<this->disk.size(); i++){
                     if(this->disk[i].first == "0"){             // conta quantos blocos vazios no disco há
@@ -69,13 +69,11 @@ std::vector<std::pair<std::string,int>> FileSystem::doOperation(std::vector<std:
                         }
                         this->fileTable[fileName] = {frst, numBlocks}; // atualiza-se a tabela de arquivos com a posição e a quantidade de blocos
                         this->log.push_back({pid, 0, -1, frst, true}); // coloca no log que a operação foi bem sucedida
-                        flag = true;                                    // flag que indica se a operacao foi bem sucedida
-                        break;
+                        return true;
                     }
                 }
-                if(flag == true) break;                         // se a operação foi bem sucedida, break
                 this->log.push_back({pid, 0, -1, -1, false});   // se não conseguiu alocar, coloca-se no log a falha
-                break;
+                return false;
 
             }
 
@@ -90,25 +88,26 @@ std::vector<std::pair<std::string,int>> FileSystem::doOperation(std::vector<std:
                         }
                         this->fileTable.erase(fileName);             // retira-se o arquivo da tabela de arquivos
                         this->log.push_back({pid, 1, -1, -1, true}); // coloca-se no log que a operação foi bem sucedida
-
+                        return true;
                     } else{
                         // se o processo não puder fazer a operação coloca no log
                         this->log.push_back({pid, 1, 1, -1, false});
+                        return false;
                     }
                 } else { // se o arquivo não existe, entao coloca no log
                     this->log.push_back({pid, 1, 2, -1, false});
+                    return false;
                 }
 
-                break;
             }
 
             default:
                 // se o código de operação não existe coloca-se no log
                 this->log.push_back({pid, opCode, -1, -1, false});
-                break;
+                return false;
     }
 
-    return this->disk;  // retorna-se o disco
+    return false;  // retorna-se o disco
 }
 
 // método para imprimir o estado do disco na tela

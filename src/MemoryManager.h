@@ -3,8 +3,6 @@
 
 #include "cpplibraries.h"
 
-std::vector<int> memory;
-
 class MemoryManager {
     private:
         class Segment;

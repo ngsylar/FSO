@@ -18,6 +18,7 @@ void execProcess(std::vector<std::vector<Process>>* readyProcesses, int queue){
     }
 }
 ProcessManager::ProcessManager(int max_wait){
+    readyProcesses = std::vector<std::vector<Process>>(4);
     this->max_wait = max_wait;
 }
 bool ProcessManager::insertProcess(Process process){

@@ -1,3 +1,6 @@
+#ifndef PROCESSESMANAGER_H
+#define PROCESSESMANAGER_H
+
 #include<vector>
 #include<string>
 #include<fstream>
@@ -6,6 +9,7 @@
 #include<queue>
 #include "Process.h"
 #include "Operation.h"
+
 class ProcessManager {
     private:
         std::vector<std::vector<Process>> readyProcesses;
@@ -15,9 +19,11 @@ class ProcessManager {
         void cycleQueues();
     public:
         // executa ciclo das filas
-        Operation run(){}
+        Operation run();
         // max wait é o tempo de espera maximo de um processo antes dele aumentar a prioridade
-        ProcessManager(int max_wait):readyProcesses(4){}
+        ProcessManager(int max_wait);
         // Adiciona processa em alguma das filas
         bool insertProcess(Process process);
 };
+
+#endif

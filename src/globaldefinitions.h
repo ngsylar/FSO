@@ -3,7 +3,9 @@
 
 #include "cpplibraries.h"
 #include "MemoryManager.h"
+#include "ProcessesManager.h"
 #include "Process.h"
+#include "Operation.h"
 
 inline std::vector<std::string> split (std::string s, std::string separator) {
     std::vector<std::string> res;
