@@ -12,6 +12,7 @@ int main (int argc, char *argv[]) {
     ProcessesManager processesManager(0); // editar: chutei um valor, nao sei o que deve ser passado 
 
     Dispatcher::Start(&memoryManager, &processesManager);
+    Dispatcher::PrintLog();
 
     return 0;
 }

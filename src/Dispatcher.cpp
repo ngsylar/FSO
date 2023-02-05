@@ -37,3 +37,7 @@ void Dispatcher::Start (MemoryManager* memoryManager, ProcessesManager* processe
         clock++;
     }
 }
+
+void Dispatcher::PrintLog () {
+
+}

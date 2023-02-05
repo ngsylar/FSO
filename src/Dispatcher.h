@@ -21,6 +21,7 @@ class Dispatcher {
             MemoryManager* memoryManager,
             ProcessesManager* processesManager
         );
+        static void PrintLog();
 
     friend class Parser;
 };
