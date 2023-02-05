@@ -1,5 +1,4 @@
-#include "filesystem.h"
-#include<iostream>
+#include "globaldefinitions.h"
 
 FileSystem::FileSystem(std::vector<std::pair<std::string,int>> disk, std::vector<std::tuple<int, int, int, int, bool>> log)
 {

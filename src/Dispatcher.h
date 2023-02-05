@@ -4,6 +4,7 @@
 #include "cpplibraries.h"
 #include "MemoryManager.h"
 #include "ProcessesManager.h"
+#include "FileSystem.h"
 #include "Process.h"
 #include "Operation.h"
 
@@ -19,7 +20,8 @@ class Dispatcher {
     public:
         static void Start(
             MemoryManager* memoryManager,
-            ProcessesManager* processesManager
+            ProcessesManager* processesManager,
+            FileSystem* fileSystem
         );
         static void PrintLog();
 

@@ -1,4 +1,4 @@
-#include "IOManager.h"
+#include "globaldefinitions.h"
 
 IO::IO(){
     printers = std::vector<int>(2,-1);

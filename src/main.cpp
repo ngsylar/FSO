@@ -14,8 +14,10 @@ int main (int argc, char *argv[]) {
     ProcessesManager processesManager(3000);
     FileSystem fs(Hardware::disk, log);
 
-    Dispatcher::Start(&memoryManager, &processesManager);
+    Dispatcher::Start(&memoryManager, &processesManager, &fs);
     Dispatcher::PrintLog();
+
+    std::cout << "AAAAAAAAAAAAAAAAAAI";
 
     return 0;
 }

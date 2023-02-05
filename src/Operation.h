@@ -17,8 +17,8 @@ class Operation {
         enum operation_status{
             NONE,
             WAITING,
-            FAILED,
             EXECUTING,
+            FAILED,
             SUCCESS
         };
         operation_status status;
