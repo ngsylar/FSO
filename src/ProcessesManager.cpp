@@ -11,7 +11,9 @@ void execProcess(std::vector<std::vector<Process>>* readyProcesses, int queue){
         (*readyProcesses)[tempProcess.getPriority()].push_back(tempProcess);
     }
 }
-ProcessesManager::ProcessesManager(int max_wait){
+
+ProcessManager::ProcessManager(int max_wait){
+    readyProcesses = std::vector<std::vector<Process>>(4);
     this->max_wait = max_wait;
 }
 bool ProcessesManager::insertProcess(Process process){
