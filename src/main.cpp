@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 #include<vector>
 #include<string>
 #include<fstream>
@@ -6,9 +5,7 @@
 #include<regex>
 #include "process.h"
 #include "filesystem.h"
-=======
 #include "globaldefinitions.h"
->>>>>>> 3415422ecf5e00040034d1c30d1f7aa373e1e018
 
 // Recebe vetor dos processos a partir do parser e instancia eles no vetor de processos instanciados
 void ProcessInstantiator (std::vector<std::vector<std::string>> parsedProcesses, std::vector<Process>* instantiatedProcesses) {
@@ -29,16 +26,6 @@ void ProcessInstantiator (std::vector<std::vector<std::string>> parsedProcesses,
 }
 
 // Cria o vetor de disk a partir do tamanho e dos files iniciais onde quem criou é -1
-<<<<<<< HEAD
-std::vector<std::pair<std::string,int>> diskInstantiator(int size, std::vector<std::vector<std::string>> parsedFiles){
-    std::vector<std::pair<std::string,int>> f(size, {"0", -1});
-    for(int i = 0; i<(int)parsedFiles.size(); i++){
-        int start = std::stoi(parsedFiles[i][1]);
-        int size = std::stoi(parsedFiles[i][2]);
-        for(int j = start;j<start+size; j++){
-            f[j] = {parsedFiles[i][0],-1};
-        }
-=======
 std::vector<std::pair<std::string, int>> DiskInstantiator (int diskBlocksCount, std::vector<std::vector<std::string>> parsedFileLines) {
     std::vector<std::pair<std::string,int>> disk(diskBlocksCount, {"0", -1});
 
@@ -48,20 +35,9 @@ std::vector<std::pair<std::string, int>> DiskInstantiator (int diskBlocksCount, 
 
         for(int j=start; j < start+size; j++)
             disk[j] = {parsedFileLines[i][0], -1};
->>>>>>> 3415422ecf5e00040034d1c30d1f7aa373e1e018
     }
     return disk;
 }
-<<<<<<< HEAD
-// retorna o arquivo de files.txt em uma tupla de {size, operações, inicialização}
-std::tuple<int, std::vector<std::vector<std::string>>, std::vector<std::vector<std::string>>> parseFiles(std::string filesPath){
-    int size;
-    int occupied;
-    int aux;
-    std::vector<std::vector<std::string>> parsed;
-    std::vector<std::vector<std::string>> parsedInit;
-    std::ifstream file;
-=======
 
 // retorna o arquivo de files.txt em uma tupla de {diskBlocksCount, operations, inicialização}
 std::tuple<int, std::vector<std::vector<std::string>>, std::vector<std::vector<std::string>>> ParseFilesFile (std::string filesFilename) {
@@ -69,7 +45,6 @@ std::tuple<int, std::vector<std::vector<std::string>>, std::vector<std::vector<s
     std::vector<std::vector<std::string>> parsedFileLines;
     std::vector<std::vector<std::string>> parsedOperationLines;
 
->>>>>>> 3415422ecf5e00040034d1c30d1f7aa373e1e018
     std::string line;
     std::ifstream file;
     file.open(filesFilename);
@@ -118,12 +93,11 @@ int main (int argc, char *argv[]) {
     processesFilename = argv[argc-2];
     filesFilename = argv[argc-1];
 
-    std::tuple<int, std::vector<std::vector<std::string>>, std::vector<std::vector<std::string>>> parsedFiles = parseFiles(file_name);
-
-    std::vector<std::pair<std::string,int>> disk = diskInstantiator(std::get<0>(parsedFiles), std::get<2>(parsedFiles));
+    std::tuple<int, std::vector<std::vector<std::string>>, std::vector<std::vector<std::string>>> filesDescriptor = ParseFilesFile(filesFilename);
+    std::vector<std::pair<std::string, int>> disk = DiskInstantiator(std::get<0>(filesDescriptor), std::get<1>(filesDescriptor));
     std::vector<std::tuple<int, int, int, int, bool>> log;
     FileSystem fs(disk, log);
 
-    
+
     return 0;
 }
