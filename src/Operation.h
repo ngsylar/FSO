@@ -15,13 +15,12 @@ class Operation {
         std::string getFileName();
         int getFileSize();
         enum operation_status{
-            WAITING,
-            NONE,
             FAILED,
             EXECUTING,
             SUCCESS
         };
         operation_status status;
+
     private:
         int id;
         int pid;

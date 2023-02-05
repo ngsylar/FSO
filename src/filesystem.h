@@ -1,11 +1,14 @@
-#ifndef FS_H
-#define FS_H
+#ifndef FILESYSTEM_H
+#define FILESYSTEM_H
+
 #include<vector>
 #include<map>
 #include<string>
 #include<fstream>
 #include<iostream>
+#include "cpplibraries.h"
 #include "Operation.h"
+
 class FileSystem {
     public:
         FileSystem();
@@ -24,4 +27,5 @@ class FileSystem {
         std::map<std::string, std::pair<int, int>> fileTable;
         std::vector<std::tuple<int, int, int, int, bool>> log;
 };
+
 #endif

@@ -19,7 +19,9 @@ Operation execProcess(std::vector<std::vector<Process>>* readyProcesses, int que
     }
     return op;
 }
-ProcessesManager::ProcessesManager(int max_wait){
+
+ProcessManager::ProcessManager(int max_wait){
+    readyProcesses = std::vector<std::vector<Process>>(4);
     this->max_wait = max_wait;
     this->readyProcesses = std::vector<std::vector<Process>>(4);
 }
