@@ -6,7 +6,7 @@ int Dispatcher::clock = 0;
 void Dispatcher::Start (MemoryManager* memoryManager, ProcessesManager* processesManager) {
     Parser::ProcessInstantiator(Parser::processesDescriptor);
     std::sort(instantiatedProcesses.begin(), instantiatedProcesses.end(),
-        [&](Process A, Process B){ A.getInitTime() < B.getInitTime(); });
+        [&](Process A, Process B){ return (A.getInitTime() < B.getInitTime()); });
 
     // editar: mudar condicao
     while (true) {
