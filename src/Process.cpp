@@ -1,4 +1,6 @@
 #include "globaldefinitions.h"
+#include "IOManager.h"
+#include "filesystem.h"
 
 Process::Process(int pid, int init_time, int priority, int exec_time, int alloc_mem_blocks, int printer_code, int scan_req, int modem_req, int disk_num, std::queue<Operation> operations)
 {
@@ -18,24 +20,30 @@ Process::Process(int pid, int init_time, int priority, int exec_time, int alloc_
 Process::Process()
 {
 }
+// zera run_time
 void Process::resetRunTime()
 {
     this->run_time = 0;
 }
+// retorna o tempo de de processador restante (exec_time - run_time)
 int Process::getRemainingTime()
 {
     return this->exec_time-this->run_time;
 }
+// aumenta wait em 1
 void Process::incrementWait(){
     this->wait++;
 }
+// soma executed_time no run_time
 void Process::updateRunTime(int executed_time)
 {
     this->run_time += executed_time;
 }
+// setta wait como new_wait
 void Process::updateWait(int new_wait){
     this->wait = new_wait;
 }
+// seta priority como new_priority
 void Process::setPriority(int new_priority){
     this->priority = new_priority;
 }
@@ -72,23 +80,88 @@ int Process::getModemReq(){
 int Process::getDiskNum(){
     return this->disk_num;
 }
-bool Process::getIO(int id){
-    // TODO down semaforo
-}
-bool Process::freeIO(int id){
-    // TODO up semaforo
-}
-Operation Process::run(){
-    if(this->running_op.status != this->running_op.EXECUTING){
-        this->running_op = this->operations.front();
-        this->operations.pop();
+bool Process::getIO(IO io){
+    if(this->modem_req){
+        if(!io.checkUsingModem(this->pid)){
+            io.useModem(this->pid);
+            if(!io.checkUsingModem(this->pid)){
+                return false;
+            }
+        }
+    } 
+    if(this->printer_code){
+        if(!io.checkUsingPrinter(this->getPrinterCode(),this->pid)){
+            io.checkUsingPrinter(this->getPrinterCode(),this->pid);
+            if(!io.checkUsingPrinter(this->getPrinterCode(),this->pid)){
+                return false;
+            }
+        }
+
     }
+    if(this->scan_req){
+        if(!io.checkUsingScanner(this->pid)){
+            io.checkUsingScanner(this->pid);
+            if(!io.checkUsingScanner(this->pid)){
+                return false;
+            }
+        }
+
+    }
+    if(this->disk_num){
+        if(!io.checkUsingSATA(this->getDiskNum(),this->pid)){
+            io.checkUsingSATA(this->getDiskNum(),this->pid);
+            if(!io.checkUsingSATA(this->getDiskNum(),this->pid)){
+                return false;
+            }
+        }
+    }
+    return true;
+}
+bool Process::freeIO(IO io){
+    if(this->modem_req){
+        if(io.checkUsingModem(this->pid)){
+            io.freeModem();
+        }
+    } 
+    if(this->printer_code){
+        if(io.checkUsingPrinter(this->getPrinterCode(),this->pid)){
+            io.freePrinter(this->getPrinterCode());
+        }
+
+    }
+    if(this->scan_req){
+        if(io.checkUsingScanner(this->pid)){
+            io.freeScanner();
+        }
+
+    }
+    if(this->disk_num){
+        if(io.checkUsingSATA(this->getDiskNum(),this->pid)){
+            io.freeSATA(this->getDiskNum());
+        }
+    }
+}
+Operation Process::run(IO io, FileSystem fs){
     if(this->getRemainingTime()-1 > 0){
+        if(!getIO(io))
+            return this->running_op;
         this->updateRunTime(1);
         this->updateWait(0);
+        if(this->running_op.status == this->running_op.WAITING){
+            bool res = fs.doOperation(this->running_op, this->priority);
+            if(res)
+                this->running_op.status = this->running_op.FAILED;
+            else
+                this->running_op.status = this->running_op.EXECUTING;
+        }
     } else {
-        if(this->running_op.status != this->running_op.FAILED){}
-            this->running_op.status = this->running_op.SUCCESS;
-        return this->running_op;
+        // separa tarefa
+        Operation op = this->running_op;
+        this->running_op = this->operations.front();
+        this->operations.pop();
+        if(op.status != op.FAILED)
+            op.status = op.SUCCESS;
+        this->freeIO(io);
+        return op;
     }
 }

@@ -74,7 +74,7 @@ int MemoryManager::Allocate (int priority, int blocksCount) {
 
 bool MemoryManager::Deallocate (int pid) {
     // apaga o processo da tabela de processos
-    if (not processesTable.count(pid)) return;
+    if (not processesTable.count(pid)) return false;
     std::pair<int, int> addressSpace = processesTable[pid];
     processesTable.erase(pid);
 

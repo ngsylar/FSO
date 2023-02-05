@@ -7,35 +7,54 @@
 #include "Process.h"
 #include "ProcessesManager.h"
 // executa um processo da fila de processos e se precisar, realimenta a fila 
-Operation execProcess(std::vector<std::vector<Process>>* readyProcesses, int queue){
+Operation execProcess(std::vector<std::vector<Process>>* readyProcesses, int queue, IO io, FileSystem fs){
     Process tempProcess = (*readyProcesses)[queue].front();
-    (*readyProcesses)[queue].erase((*readyProcesses)[queue].begin());
-    // se ainda falta executar, aumenta o tempo de exec e realimenta a fila zerando o wait
-    Operation op = tempProcess.run();
-    if(op.status == op.EXECUTING){
-        (*readyProcesses)[tempProcess.getPriority()].push_back(tempProcess);
+    Operation op;
+    if(tempProcess.getPriority()){
+        (*readyProcesses)[queue].erase((*readyProcesses)[queue].begin());
+        // se ainda falta executar, aumenta o tempo de exec e realimenta a fila zerando o wait
+        op = tempProcess.run(io,fs);
+        if(op.status == op.EXECUTING || op.status == op.WAITING){
+            (*readyProcesses)[tempProcess.getPriority()].push_back(tempProcess);
+        }
+    } else {
+        op = tempProcess.run(io,fs);
+        if(op.status != op.EXECUTING && op.status != op.WAITING){
+            (*readyProcesses)[queue].erase((*readyProcesses)[queue].begin());
+        }
     }
     return op;
 }
 ProcessManager::ProcessManager(int max_wait){
     this->max_wait = max_wait;
+    this->readyProcesses = std::vector<std::vector<Process>>(4);
 }
 bool ProcessManager::insertProcess(Process process){
-    this->readyProcesses[process.getPriority()].push_back(process); 
+    if(this->readyProcesses[process.getPriority()].size()<1000){
+        this->readyProcesses[process.getPriority()].push_back(process); 
+        return true;
+    } else {
+        return false;
+    }
 }
 // Escolhe um processo para realizar
-void ProcessManager::cycleQueues(){
+Operation ProcessManager::cycleQueues(IO io, FileSystem fs){
     // Verifica fila de tempo real
     if(this->readyProcesses[0].size()){
-        execProcess(&this->readyProcesses, 0);
-        //TODO: adicionar callback para indicar termino do processo
+        return execProcess(&(this->readyProcesses), 0, io, fs);
     }else {
         for(int i = 1; i<this->readyProcesses.size(); i++){
             if(this->readyProcesses[i].size()){
-                execProcess(&this->readyProcesses, i);
+                return execProcess(&(this->readyProcesses), i, io, fs);
             }
         }
     }
+    Operation op = Operation(-1,-1,-1,"",-1);
+    op.status = op.NONE;
+    return op;
+}
+Operation ProcessManager::run(IO io, FileSystem fs){
+    return this->cycleQueues(io, fs);
 }
 void ProcessManager::updateWaits(){
     // começa em 1 para ignorar fila de tempo real

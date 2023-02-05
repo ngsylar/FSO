@@ -2,6 +2,8 @@
 #define PROCESS_H
 
 #include "cpplibraries.h"
+#include "IOManager.h"
+#include "filesystem.h"
 
 class Process {
     public:
@@ -30,9 +32,9 @@ class Process {
         int getModemReq();
         int getDiskNum();
         int getWait();
-        bool getIO(int io);
-        bool freeIO(int io);
-        Operation run();
+        bool getIO(IO io);
+        bool freeIO(IO io);
+        Operation run(IO io, FileSystem fs);
         void incrementWait();
         void updateWait(int new_wait);
         void setPriority(int new_priority);

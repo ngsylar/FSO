@@ -1,6 +1,22 @@
+#ifndef OPERATION_H
+#define OPERATION_H
 class Operation {
     public:
+        Operation();
+        Operation(
+            int id, 
+            int pid, 
+            int opcode, 
+            std::string file_name, 
+            int file_size);
+        int getId();
+        int getPid();
+        int getOpcode();
+        std::string getFileName();
+        int getFileSize();
         enum operation_status{
+            WAITING,
+            NONE,
             FAILED,
             EXECUTING,
             SUCCESS
@@ -9,7 +25,8 @@ class Operation {
     private:
         int id;
         int pid;
-        int type;
-        int file_name;
+        int opcode;
+        std::string file_name;
         int file_size;
 };
+#endif
