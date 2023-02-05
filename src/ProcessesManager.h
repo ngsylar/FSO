@@ -17,7 +17,7 @@ class ProcessesManager {
         // executa ciclo das filas
         Operation run(IO io, FileSystem fs);
         // max wait é o tempo de espera maximo de um processo antes dele aumentar a prioridade
-        ProcessManager(int max_wait);
+        ProcessesManager(int max_wait);
         // Adiciona processa em alguma das filas
         bool insertProcess(Process process);
 };

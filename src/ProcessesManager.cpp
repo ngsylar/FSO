@@ -23,7 +23,7 @@ ProcessesManager::ProcessesManager(int max_wait){
     this->max_wait = max_wait;
     this->readyProcesses = std::vector<std::vector<Process>>(4);
 }
-bool ProcessManager::insertProcess(Process process){
+bool ProcessesManager::insertProcess(Process process){
     if(this->readyProcesses[process.getPriority()].size()<1000){
         this->readyProcesses[process.getPriority()].push_back(process); 
         return true;
@@ -32,7 +32,7 @@ bool ProcessManager::insertProcess(Process process){
     }
 }
 // Escolhe um processo para realizar
-Operation ProcessManager::cycleQueues(IO io, FileSystem fs){
+Operation ProcessesManager::cycleQueues(IO io, FileSystem fs){
     // Verifica fila de tempo real
     if(this->readyProcesses[0].size()){
         return execProcess(&(this->readyProcesses), 0, io, fs);
@@ -47,7 +47,7 @@ Operation ProcessManager::cycleQueues(IO io, FileSystem fs){
     op.status = op.NONE;
     return op;
 }
-Operation ProcessManager::run(IO io, FileSystem fs){
+Operation ProcessesManager::run(IO io, FileSystem fs){
     return this->cycleQueues(io, fs);
 }
 void ProcessesManager::updateWaits(){
