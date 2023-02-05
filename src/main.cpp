@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 #include<vector>
 #include<string>
 #include<fstream>
@@ -5,23 +6,12 @@
 #include<regex>
 #include "process.h"
 #include "filesystem.h"
+=======
+#include "globaldefinitions.h"
+>>>>>>> 3415422ecf5e00040034d1c30d1f7aa373e1e018
 
-std::vector<std::string> split(std::string s,std::string separator){
-    std::vector<std::string> res;
-
-    std::regex r(separator);
-
-    std::regex_token_iterator<std::string::iterator> regex_end;
-
-    std::regex_token_iterator<std::string::iterator> splitted(s.begin(), s.end(), r, -1);
-
-    while(splitted != regex_end) res.push_back(*splitted++);
-
-    return res;
-
-}
 // Recebe vetor dos processos a partir do parser e instancia eles no vetor de processos instanciados
-void processInstantiator(std::vector<std::vector<std::string>> parsedProcesses, std::vector<Process>* instantiatedProcesses){
+void ProcessInstantiator (std::vector<std::vector<std::string>> parsedProcesses, std::vector<Process>* instantiatedProcesses) {
     for(int i = 0; i<(int)parsedProcesses.size(); i++){
         Process p(
             i,
@@ -36,9 +26,10 @@ void processInstantiator(std::vector<std::vector<std::string>> parsedProcesses, 
         );
         instantiatedProcesses->push_back(p);
     }
-    return;
 }
+
 // Cria o vetor de disk a partir do tamanho e dos files iniciais onde quem criou é -1
+<<<<<<< HEAD
 std::vector<std::pair<std::string,int>> diskInstantiator(int size, std::vector<std::vector<std::string>> parsedFiles){
     std::vector<std::pair<std::string,int>> f(size, {"0", -1});
     for(int i = 0; i<(int)parsedFiles.size(); i++){
@@ -47,9 +38,21 @@ std::vector<std::pair<std::string,int>> diskInstantiator(int size, std::vector<s
         for(int j = start;j<start+size; j++){
             f[j] = {parsedFiles[i][0],-1};
         }
+=======
+std::vector<std::pair<std::string, int>> DiskInstantiator (int diskBlocksCount, std::vector<std::vector<std::string>> parsedFileLines) {
+    std::vector<std::pair<std::string,int>> disk(diskBlocksCount, {"0", -1});
+
+    for(int i=0; i < (int)parsedFileLines.size(); i++){
+        int start = stoi(parsedFileLines[i][1]);
+        int size = stoi(parsedFileLines[i][2]);
+
+        for(int j=start; j < start+size; j++)
+            disk[j] = {parsedFileLines[i][0], -1};
+>>>>>>> 3415422ecf5e00040034d1c30d1f7aa373e1e018
     }
-    return f;
+    return disk;
 }
+<<<<<<< HEAD
 // retorna o arquivo de files.txt em uma tupla de {size, operações, inicialização}
 std::tuple<int, std::vector<std::vector<std::string>>, std::vector<std::vector<std::string>>> parseFiles(std::string filesPath){
     int size;
@@ -58,49 +61,62 @@ std::tuple<int, std::vector<std::vector<std::string>>, std::vector<std::vector<s
     std::vector<std::vector<std::string>> parsed;
     std::vector<std::vector<std::string>> parsedInit;
     std::ifstream file;
+=======
+
+// retorna o arquivo de files.txt em uma tupla de {diskBlocksCount, operations, inicialização}
+std::tuple<int, std::vector<std::vector<std::string>>, std::vector<std::vector<std::string>>> ParseFilesFile (std::string filesFilename) {
+    int diskBlocksCount, diskSegmentsFilled;
+    std::vector<std::vector<std::string>> parsedFileLines;
+    std::vector<std::vector<std::string>> parsedOperationLines;
+
+>>>>>>> 3415422ecf5e00040034d1c30d1f7aa373e1e018
     std::string line;
-    file.open(filesPath);
-    int counter=0;
-    while(std::getline(file, line)){
-        switch(counter){
-            case 0:
-                size = stoi(line);
-                break;
-            case 1:
-                occupied = stoi(line);
-                break;
-            default:
-                std::vector<std::string> s = split(line,", ");
-                if(occupied-- > 0){
-                    parsedInit.push_back(s);                            
-                } else {
-                    parsed.push_back(s);
-                }
-                break;
-        }
-        counter++;
-    }
-    return {size, parsed, parsedInit};
-}
-// retorna o parse do arquivo de processos;
-std::vector<std::vector<std::string>> parseProcesses(std::string processesPath){
-    std::vector<std::vector<std::string>> v;
     std::ifstream file;
-    std::string line;
-    file.open(processesPath);
-    while(std::getline(file, line)){
-        std::vector<std::string> s = split(line,", ");
-        v.push_back(s);
+    file.open(filesFilename);
+
+    // quantidade de blocos do disco
+    std::getline(file, line);
+    diskBlocksCount = stoi(line);
+
+    // quantidade de blocos ocupados
+    std::getline(file, line);
+    diskSegmentsFilled = stoi(line);
+
+    // arquivos salvos no disco incialmente
+    while (std::getline(file, line)) {
+        std::vector<std::string> parsedFileLine = split(line, ", ");
+        if (diskSegmentsFilled-- > 0)
+            parsedFileLines.push_back(parsedFileLine);                            
     }
-    return v;
+    // operacoes programadas do sistema de arquivos
+    while (std::getline(file, line)) {
+        std::vector<std::string> parsedOperationLine = split(line, ", ");
+        parsedOperationLines.push_back(parsedOperationLine);
+    }
+
+    return {diskBlocksCount, parsedFileLines, parsedOperationLines};
 }
 
-int main(int argc, char *argv[]){
-    
-    std::string file_name;
+// retorna o parse do arquivo de processos;
+std::vector<std::vector<std::string>> ParseProcessesFile (std::string processesFilename) {
+    std::vector<std::vector<std::string>> parsedProcessLines;
 
-    // ultimo path é o de files
-    file_name = argv[argc-1];
+    std::string line;
+    std::ifstream file;
+    file.open(processesFilename);
+
+    while (std::getline(file, line)) {
+        std::vector<std::string> parsedLine = split(line,", ");
+        parsedProcessLines.push_back(parsedLine);
+    }
+    return parsedProcessLines;
+}
+
+int main (int argc, char *argv[]) {
+    std::string processesFilename, filesFilename;
+
+    processesFilename = argv[argc-2];
+    filesFilename = argv[argc-1];
 
     std::tuple<int, std::vector<std::vector<std::string>>, std::vector<std::vector<std::string>>> parsedFiles = parseFiles(file_name);
 

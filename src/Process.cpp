@@ -1,4 +1,4 @@
-#include "process.h"
+#include "globaldefinitions.h"
 
 Process::Process(int pid, int init_time, int priority, int exec_time, int alloc_mem_blocks, int printer_code, int scan_req, int modem_req, int disk_num)
 {
@@ -12,6 +12,7 @@ Process::Process(int pid, int init_time, int priority, int exec_time, int alloc_
     this->scan_req = scan_req;
     this->modem_req = modem_req;
     this->disk_num = disk_num;
+    this->wait = 0;
 }
 Process::Process()
 {
@@ -24,9 +25,21 @@ int Process::getRemainingTime()
 {
     return this->exec_time-this->run_time;
 }
+void Process::incrementWait(){
+    this->wait++;
+}
 void Process::updateRunTime(int executed_time)
 {
     this->run_time += executed_time;
+}
+void Process::updateWait(int new_wait){
+    this->wait = new_wait;
+}
+void Process::setPriority(int new_priority){
+    this->priority = new_priority;
+}
+int Process::getWait(){
+    return this->wait;
 }
 int Process::getPid(){
    return this->pid;
