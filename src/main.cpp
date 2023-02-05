@@ -15,6 +15,7 @@ int main (int argc, char *argv[]) {
     FileSystem fs(Hardware::disk, log);
 
     Dispatcher::Start(&memoryManager, &processesManager);
+    Dispatcher::PrintLog();
 
     return 0;
 }

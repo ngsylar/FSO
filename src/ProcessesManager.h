@@ -13,6 +13,7 @@ class ProcessesManager {
         void checkWait();
         int max_wait;
         Operation cycleQueues(IO io, FileSystem fs);
+
     public:
         // executa ciclo das filas
         Operation run(IO io, FileSystem fs);
