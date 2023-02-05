@@ -2,9 +2,9 @@
 #include "IOManager.h"
 #include "filesystem.h"
 
-Process::Process(int pid, int init_time, int priority, int exec_time, int alloc_mem_blocks, int printer_code, int scan_req, int modem_req, int disk_num, std::queue<Operation> operations)
+Process::Process(int init_time, int priority, int exec_time, int alloc_mem_blocks, int printer_code, int scan_req, int modem_req, int disk_num)
 {
-    this->pid = pid;
+    this->pid = -1;
     this->run_time = 0;
     this->init_time = init_time;
     this->priority = priority;
@@ -15,7 +15,6 @@ Process::Process(int pid, int init_time, int priority, int exec_time, int alloc_
     this->modem_req = modem_req;
     this->disk_num = disk_num;
     this->wait = 0;
-    this->operations = operations;
 }
 Process::Process()
 {

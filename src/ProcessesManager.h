@@ -1,12 +1,12 @@
-#include<vector>
-#include<string>
-#include<fstream>
-#include<iostream>
-#include<regex>
-#include<queue>
+#ifndef PROCESSES_MANAGER_H
+#define PROCESSES_MANAGER_H
+
+#include "cpplibraries.h"
+
 #include "Process.h"
 #include "Operation.h"
-class ProcessManager {
+
+class ProcessesManager {
     private:
         std::vector<std::vector<Process>> readyProcesses;
         void updateWaits();
@@ -21,3 +21,5 @@ class ProcessManager {
         // Adiciona processa em alguma das filas
         bool insertProcess(Process process);
 };
+
+#endif
