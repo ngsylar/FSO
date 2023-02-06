@@ -21,11 +21,11 @@ void Dispatcher::Start (
         } else do {
             // se nova instancia de processo chegou, tenta alocar memoria
             Process newProcess = instantiatedProcesses.front();
-            if (newProcess.getInitTime() <= clock) {
+            if (newProcess.getInitTime()+1 <= clock) {
                 memoryManager->Allocate(&newProcess);
 
                 // se conseguiu alocar memoria, processo eh criado
-                if (newProcess.getPid() != -1)
+                if (newProcess.getPid() != -1){
                     for (int i=0; i < Parser::operationDescriptor.size(); i++)
                         if (stoi(Parser::operationDescriptor[i][0]) == newProcess.getPid()) {
                             Operation op(
@@ -38,9 +38,10 @@ void Dispatcher::Start (
                             op.status = op.WAITING;
                             newProcess.insertOperation(&op);
                         }
-                processesManager->insertProcess(newProcess);
-                logProcesses.push_back(std::make_pair(clock, newProcess));
-                instantiatedProcesses.erase(instantiatedProcesses.begin());
+                    processesManager->insertProcess(newProcess);
+                    logProcesses.push_back(std::make_pair(clock, newProcess));
+                    instantiatedProcesses.erase(instantiatedProcesses.begin());
+                }
             } else break;
         } while (not instantiatedProcesses.empty());
 

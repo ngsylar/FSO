@@ -92,8 +92,9 @@ bool MemoryManager::Deallocate (int pid) {
                 currentSegment->filled = false;
 
                 // se o proximo segmento tambem eh livre, mescla os dois segmentos
+
                 Segment* nextSegment = currentSegment->nextSegment;
-                if (not nextSegment->filled) {
+                if (nextSegment != nullptr && not nextSegment->filled) {
                     currentSegment->nextSegment = nextSegment->nextSegment;
                     delete(nextSegment);
                 }

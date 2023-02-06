@@ -3,23 +3,25 @@
 // executa um processo da fila de processos e se precisar, realimenta a fila 
 Process execProcess(std::vector<std::vector<Process>>* readyProcesses, int queue, IO io, FileSystem& fs){
     Process& tempProcess = (*readyProcesses)[queue].front();
+    Process processCopy;
     Operation op;
     if(tempProcess.getPriority()){
         (*readyProcesses)[queue].erase((*readyProcesses)[queue].begin());
         // se ainda falta executar, aumenta o tempo de exec e realimenta a fila zerando o wait
         op = tempProcess.run(io,fs);
+        processCopy = tempProcess;                
         if(op.status == op.EXECUTING || op.status == op.WAITING){
             (*readyProcesses)[tempProcess.getPriority()].push_back(tempProcess);
         }
     } else {
         op = tempProcess.run(io,fs);
+        processCopy = tempProcess;                
         if(op.status != op.EXECUTING && op.status != op.WAITING){
             if(!tempProcess.remainingOperations() && (tempProcess.getRunningOp().status != op.WAITING && tempProcess.getRunningOp().status != op.EXECUTING)){
                 (*readyProcesses)[queue].erase((*readyProcesses)[queue].begin());
             }
         }
     }
-    Process processCopy = tempProcess;
     return processCopy;
 }
 
