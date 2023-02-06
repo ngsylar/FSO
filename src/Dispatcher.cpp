@@ -18,33 +18,37 @@ void Dispatcher::Start (
             std::cout << logOperations.size() << " " << Parser::operationDescriptor.size() << std::endl;
             if (logOperations.size() == Parser::operationDescriptor.size())
                 break;
-        } else do {
-            // se nova instancia de processo chegou, tenta alocar memoria
-            Process newProcess = instantiatedProcesses.front();
-            if (newProcess.getInitTime()+1 <= clock) {
-                memoryManager->Allocate(&newProcess);
 
-                // se conseguiu alocar memoria, processo eh criado
-                if (newProcess.getPid() != -1){
-                    for (int i=0; i < Parser::operationDescriptor.size(); i++)
-                        if (stoi(Parser::operationDescriptor[i][0]) == newProcess.getPid()) {
-                            Operation op(
-                                i,
-                                stoi(Parser::operationDescriptor[i][0]),
-                                stoi(Parser::operationDescriptor[i][1]),
-                                Parser::operationDescriptor[i][2],
-                                stoi(Parser::operationDescriptor[i][3])
-                            );
-                            op.status = op.WAITING;
-                            newProcess.insertOperation(&op);
-                        }
-                    processesManager->insertProcess(newProcess);
-                    logProcesses.push_back(std::make_pair(clock, newProcess));
-                    instantiatedProcesses.erase(instantiatedProcesses.begin());
-                }
-            } else break;
-        } while (not instantiatedProcesses.empty());
+        // se nova instancia de processo chegou, tenta alocar memoria
+        } else {
+            std::vector<Process>::iterator it = instantiatedProcesses.begin();
+            do {
+                Process newProcess = *it;
+                if (newProcess.getInitTime() <= clock) {
+                    memoryManager->Allocate(&newProcess);
 
+                    // se conseguiu alocar memoria, processo eh criado
+                    if (newProcess.getPid() != -1){
+                        for (int i=0; i < Parser::operationDescriptor.size(); i++)
+                            if (stoi(Parser::operationDescriptor[i][0]) == newProcess.getPid()) {
+                                Operation op(
+                                    i,
+                                    stoi(Parser::operationDescriptor[i][0]),
+                                    stoi(Parser::operationDescriptor[i][1]),
+                                    Parser::operationDescriptor[i][2],
+                                    stoi(Parser::operationDescriptor[i][3])
+                                );
+                                op.status = op.WAITING;
+                                newProcess.insertOperation(&op);
+                            }
+                        processesManager->insertProcess(newProcess);
+                        logProcesses.push_back(std::make_pair(clock, newProcess));
+                        instantiatedProcesses.erase(instantiatedProcesses.begin());
+                    }
+                    it++;
+                } else break;
+            } while (it != instantiatedProcesses.end());
+        }
         // continua o processamento
         Process process = processesManager->run(Hardware::IOmanager, *fileSystem);
         if (process.isFinished())
