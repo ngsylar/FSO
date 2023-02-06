@@ -141,11 +141,13 @@ void Process::freeIO(IO& io){
 }
 Operation Process::run(IO io, FileSystem& fs){
     if(this->running_op.status != this->running_op.WAITING && this->running_op.status != this->running_op.EXECUTING){
-        this->running_op = this->operations.front();
-        this->operations.pop();
-        this->resetRunTime();
+        if(this->operations.size()){
+            this->running_op = this->operations.front();
+            this->operations.pop();
+            this->resetRunTime();
+        }
     }
-    if(this->getRemainingTime()-1 > 0){
+    if(this->getRemainingTime()-1 >= 0){
         if(!getIO(io))
             return this->running_op;
         this->updateRunTime(1);
@@ -163,7 +165,7 @@ Operation Process::run(IO io, FileSystem& fs){
         
         // this->running_op = this->operations.front();
         // this->operations.pop();
-        if(this->running_op.status != this->running_op.FAILED)
+        if(this->running_op.status != this->running_op.FAILED && this->running_op.status != this->running_op.NONE)
             this->running_op.status = this->running_op.SUCCESS;
         this->freeIO(io);
         return this->running_op;
