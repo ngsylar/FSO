@@ -72,23 +72,23 @@ void Dispatcher::Start (
 }
 
 void Dispatcher::PrintLog () {
-    std::cout << "\n";
+    std::cout << std::endl;
     for (auto& log_p: logProcesses) {
         Process& process = std::get<1>(log_p);
-        std::cout << "dispatcher at time " << std::get<0>(log_p) << " =>\n";
-        std::cout << "\tPID: " << process.getPid() << "\n";
-        std::cout << "\toffset: " << std::get<2>(log_p) << "\n";
-        std::cout << "\tblocks: " << process.getAllocMemBlocks() << "\n";
-        std::cout << "\tpriority: " << process.getPriority() << "\n";
-        std::cout << "\ttime: " << process.getExecTime() << "\n";
-        std::cout << "\tprinter: " << process.getPrinterCode() << "\n";
-        std::cout << "\tscanner: " << process.getScanReq() << "\n";
-        std::cout << "\tmodem: " << process.getModemReq() << "\n";
-        std::cout << "\tdrive: " << process.getDiskNum() << "\n\n";
+        std::cout << "dispatcher at time " << std::get<0>(log_p) << " =>" << std::endl;
+        std::cout << "\tPID: " << process.getPid() << std::endl;
+        std::cout << "\toffset: " << std::get<2>(log_p) << std::endl;
+        std::cout << "\tblocks: " << process.getAllocMemBlocks() << std::endl;
+        std::cout << "\tpriority: " << process.getPriority() << std::endl;
+        std::cout << "\ttime: " << process.getExecTime() << std::endl;
+        std::cout << "\tprinter: " << process.getPrinterCode() << std::endl;
+        std::cout << "\tscanner: " << process.getScanReq() << std::endl;
+        std::cout << "\tmodem: " << process.getModemReq() << std::endl;
+        std::cout << "\tdrive: " << process.getDiskNum() << std::endl << std::endl;
 
         int processPid = process.getPid();
-        std::cout << "process " << processPid << " =>\n";
-        std::cout << "\tP" << process.getPid() << " STARTED\n";
+        std::cout << "process " << processPid << " =>" << std::endl;
+        std::cout << "\tP" << process.getPid() << " STARTED" << std::endl;
         std::sort(logOperations.begin(), logOperations.end(),
         [&](std::pair<int, Operation> A, std::pair<int, Operation> B) {
             return (A.second.getId() < B.second.getId());
@@ -96,8 +96,8 @@ void Dispatcher::PrintLog () {
         int index = 0;
         for (auto& log_o: logOperations)
             if (log_o.second.getPid() == processPid)
-                std::cout << "\tP" << process.getPid() << " instruction " << index++ << " made at time " << log_o.first << "\n";
-        std::cout << "\tP" << process.getPid() << " return SIGINT\n\n";
+                std::cout << "\tP" << process.getPid() << " instruction " << index++ << " made at time " << log_o.first << std::endl;
+        std::cout << "\tP" << process.getPid() << " return SIGINT" << std::endl << std::endl;
     }
 
     std::vector<std::tuple<int, int, int, int, bool>> fileSystemLog = fileSystemPtr->getLog();
@@ -115,7 +115,7 @@ void Dispatcher::PrintLog () {
         } if (i == logSize) {
             log_op = std::make_tuple(inst_op.getPid(), inst_op.getOpcode(), 0, -1, false);
         }
-        std::cout << "\n\nOperacao " << (inst_op.getId()+1) << " => " << (std::get<4>(log_op)? "Sucesso\n" : "Falha\n");
+        std::cout << "\n\nOperacao " << (inst_op.getId()+1) << " => " << (std::get<4>(log_op)? "Sucesso" : "Falha") << std::endl;
         std::cout << "O processo " << std::get<0>(log_op) << " ";
         /*
             int0 = pid (erro se pid nao existir)
@@ -130,7 +130,7 @@ void Dispatcher::PrintLog () {
             bool4 = falha (false) ou sucesso (true)
         */
         if ((std::get<1>(log_op) > 1) or (std::get<1>(log_op) < 0)) {
-            std::cout << "tentou realizar uma operacao que nao existe\n\n";
+            std::cout << "tentou realizar uma operacao que nao existe" << std::endl << std::endl;
         } else if (std::get<4>(log_op)) {
             if (std::get<1>(log_op)) {
                 std::cout << "deletou o arquivo " << inst_op.getFileName();
@@ -162,5 +162,5 @@ void Dispatcher::PrintLog () {
     for (auto& file: fsDisk)
         if (file.first == "0") std::cout << "   |";
         else std::cout << " " << file.first << " |";
-    std::cout << "\n\n";
+    std::cout << std::endl << std::endl;
 }
