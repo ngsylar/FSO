@@ -14,7 +14,9 @@ FileSystem::FileSystem(std::vector<std::pair<std::string,int>> disk)
             name = disk[i].first;
             start = i;
             count++;
-        } else if((this->disk[i].first == "0" || this->disk[i].first != name) && count != 0){
+        } else if((this->disk[i].first == "0" || this->disk[i].first != name || (this->disk.size()-1==i)) && count != 0){
+            if(this->disk[i].first == name)
+                count++;
             size = count;
             count = 0;
             ft[name] = {start, size};
