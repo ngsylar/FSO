@@ -20,6 +20,19 @@ Process::Process(int init_time, int priority, int exec_time, int alloc_mem_block
 }
 Process::Process()
 {
+    this->pid = -1;
+    this->run_time = -1;
+    this->init_time = -1;
+    this->priority = -1;
+    this->exec_time = -1;
+    this->alloc_mem_blocks = -1;
+    this->printer_code = -1;
+    this->scan_req = -1;
+    this->modem_req = -1;
+    this->disk_num = -1;
+    this->wait = -1;
+    this->running_op = Operation(-1,-1,-1,"",-1);
+    this->running_op.status = this->running_op.NONE;
 }
 int Process::remainingOperations(){
     return this->operations.size();
@@ -55,6 +68,11 @@ void Process::setPriority(int new_priority){
 void Process::insertOperation(Operation* operation) {
     operations.push(*operation);
 }
+
+bool Process::isFinished () {
+    return ((remainingOperations() == 0) and (not (getRunningOp().status & (Operation::WAITING | Operation::EXECUTING))));
+}
+
 Operation Process::getRunningOp(){
     return this->running_op;
 }

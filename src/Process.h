@@ -40,6 +40,7 @@ class Process {
         void updateWait(int new_wait);
         void setPriority(int new_priority);
         void insertOperation(Operation* operation);
+        bool isFinished();
     private:
         void resetRunTime();
         void updateRunTime(int executed_time);
