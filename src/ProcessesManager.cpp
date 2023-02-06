@@ -24,7 +24,15 @@ Process execProcess(std::vector<std::vector<Process>>* readyProcesses, int queue
     }
     return processCopy;
 }
-
+bool ProcessesManager::queuesAreEmpty(){
+    bool flag = true;
+    for(auto& v : this->readyProcesses){
+        if(v.size()){
+            flag = false;
+        }
+    }
+    return flag;
+}
 ProcessesManager::ProcessesManager(int max_wait){
     readyProcesses = std::vector<std::vector<Process>>(4);
     this->max_wait = max_wait;
