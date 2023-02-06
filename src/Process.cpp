@@ -109,67 +109,35 @@ int Process::getModemReq(){
 int Process::getDiskNum(){
     return this->disk_num;
 }
-bool Process::getIO(IO io){
+bool Process::getIO(IO& io){
     if(this->modem_req){
-        if(!io.checkUsingModem(this->pid)){
-            io.useModem(this->pid);
-            if(!io.checkUsingModem(this->pid)){
-                return false;
-            }
-        }
+        return io.useModem(this->pid);
     } 
     if(this->printer_code){
-        if(!io.checkUsingPrinter(this->getPrinterCode(),this->pid)){
-            io.checkUsingPrinter(this->getPrinterCode(),this->pid);
-            if(!io.checkUsingPrinter(this->getPrinterCode(),this->pid)){
-                return false;
-            }
-        }
+        return io.usePrinter(this->pid, this->printer_code);
 
     }
     if(this->scan_req){
-        if(!io.checkUsingScanner(this->pid)){
-            io.checkUsingScanner(this->pid);
-            if(!io.checkUsingScanner(this->pid)){
-                return false;
-            }
-        }
-
+        return io.useScanner(this->pid);
     }
     if(this->disk_num){
-        if(!io.checkUsingSATA(this->getDiskNum(),this->pid)){
-            io.checkUsingSATA(this->getDiskNum(),this->pid);
-            if(!io.checkUsingSATA(this->getDiskNum(),this->pid)){
-                return false;
-            }
-        }
+        return io.useSATA(this->pid, this->disk_num);
     }
     return true;
 }
-bool Process::freeIO(IO io){
+void Process::freeIO(IO& io){
     if(this->modem_req){
-        if(io.checkUsingModem(this->pid)){
-            io.freeModem();
-        }
+        io.freeModem(this->pid);
     } 
     if(this->printer_code){
-        if(io.checkUsingPrinter(this->getPrinterCode(),this->pid)){
-            io.freePrinter(this->getPrinterCode());
-        }
-
+        io.freePrinter(this->pid, this->printer_code);
     }
     if(this->scan_req){
-        if(io.checkUsingScanner(this->pid)){
-            io.freeScanner();
-        }
-
+        io.freeScanner(this->pid);
     }
     if(this->disk_num){
-        if(io.checkUsingSATA(this->getDiskNum(),this->pid)){
-            io.freeSATA(this->getDiskNum());
-        }
+        io.freeSATA(this->pid, this->disk_num);
     }
-    return true;
 }
 Operation Process::run(IO io, FileSystem& fs){
     if(this->running_op.status != this->running_op.WAITING && this->running_op.status != this->running_op.EXECUTING){

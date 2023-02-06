@@ -11,7 +11,7 @@ int main (int argc, char *argv[]) {
     std::vector<std::tuple<int, int, int, int, bool>> log;
 
     MemoryManager memoryManager;
-    ProcessesManager processesManager(3000);
+    ProcessesManager processesManager(15);
     FileSystem fs(Hardware::disk, log);
 
     Dispatcher::Start(&memoryManager, &processesManager, &fs);

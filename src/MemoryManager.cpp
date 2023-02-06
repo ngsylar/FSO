@@ -17,17 +17,17 @@ MemoryManager::Segment::Segment (bool filled, int address, int size, Segment* ne
 }
 
 MemoryManager::~MemoryManager () {
-    std::array<Segment*, 2> segmentsList = {segmentsBegin, segmentsUserBegin};
-    Segment* currentSegment,* nextSegment;
+    // std::array<Segment*, 2> segmentsList = {segmentsBegin, segmentsUserBegin};
+    // Segment* currentSegment,* nextSegment;
 
-    for (auto& firstSegment: segmentsList) {
-        currentSegment = firstSegment;
-        do {
-            nextSegment = currentSegment->nextSegment;
-            delete(currentSegment);
-        } while (nextSegment != nullptr);
-    }
-    segmentsBegin = segmentsUserBegin = nullptr;
+    // for (auto& firstSegment: segmentsList) {
+    //     currentSegment = firstSegment;
+    //     do {
+    //         nextSegment = currentSegment->nextSegment;
+    //         delete(currentSegment);
+    //     } while (nextSegment != nullptr);
+    // }
+    // segmentsBegin = segmentsUserBegin = nullptr;
 }
 
 int MemoryManager::GetFreeSegment (Segment* firstSegment, int blocksCount) {

@@ -33,8 +33,8 @@ class Process {
         int getModemReq();
         int getDiskNum();
         int getWait();
-        bool getIO(IO io);
-        bool freeIO(IO io);
+        bool getIO(IO& io);
+        void freeIO(IO& io);
         Operation run(IO io, FileSystem& fs);
         void incrementWait();
         void updateWait(int new_wait);
