@@ -14,6 +14,7 @@ class ProcessesManager {
         Process cycleQueues(IO io, FileSystem& fs);
 
     public:
+        bool queuesAreEmpty();
         // executa ciclo das filas
         Process run(IO io, FileSystem& fs);
         // max wait é o tempo de espera maximo de um processo antes dele aumentar a prioridade
