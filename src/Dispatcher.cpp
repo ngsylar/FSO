@@ -16,7 +16,7 @@ void Dispatcher::Start (
         // se nao ha mais processos para serem criados e todas as operacoes foram concluidas, finalizar
         if (instantiatedProcesses.empty()) {
             std::cout << logOperations.size() << " " << Parser::operationDescriptor.size() << std::endl;
-            if (logOperations.size() == Parser::operationDescriptor.size())
+            if (processesManager->queuesAreEmpty())
                 break;
 
         // se nova instancia de processo chegou, tenta alocar memoria
@@ -44,6 +44,7 @@ void Dispatcher::Start (
                         processesManager->insertProcess(newProcess);
                         logProcesses.push_back(std::make_pair(clock, newProcess));
                         it = instantiatedProcesses.erase(instantiatedProcesses.begin());
+
                     } else it++;
                 } else break;
             } while (it != instantiatedProcesses.end());
