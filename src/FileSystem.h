@@ -8,8 +8,7 @@ class FileSystem {
     public:
         FileSystem();
         FileSystem(
-            std::vector<std::pair<std::string,int>> disk,
-            std::vector<std::tuple<int, int, int, int, bool>> log);
+            std::vector<std::pair<std::string,int>> disk);
         bool doOperation(Operation operation, int priority);
         void showDisk();
         int findOwnerOfFile(std::string fileName);

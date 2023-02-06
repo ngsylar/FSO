@@ -65,8 +65,8 @@ void Process::setPriority(int new_priority){
     this->priority = new_priority;
 }
 
-void Process::insertOperation(Operation* operation) {
-    operations.push(*operation);
+void Process::insertOperation(Operation operation) {
+    operations.push(operation);
 }
 
 bool Process::isFinished () {

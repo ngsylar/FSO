@@ -8,16 +8,13 @@ int main (int argc, char *argv[]) {
 
     Parser::ParseInputFiles(processesFilename, filesFilename);
     Hardware::disk = Parser::DiskInstantiator(Parser::diskBlocksCount, Parser::filesDescriptor);
-    std::vector<std::tuple<int, int, int, int, bool>> log;
 
     MemoryManager memoryManager;
     ProcessesManager processesManager(15);
-    FileSystem fs(Hardware::disk, log);
+    FileSystem fs(Hardware::disk);
 
     Dispatcher::Start(&memoryManager, &processesManager, &fs);
     Dispatcher::PrintLog();
-
-    std::cout << "FIM";
 
     return 0;
 }
