@@ -43,9 +43,8 @@ void Dispatcher::Start (
                             }
                         processesManager->insertProcess(newProcess);
                         logProcesses.push_back(std::make_pair(clock, newProcess));
-                        instantiatedProcesses.erase(instantiatedProcesses.begin());
-                    }
-                    it++;
+                        it = instantiatedProcesses.erase(instantiatedProcesses.begin());
+                    } else it++;
                 } else break;
             } while (it != instantiatedProcesses.end());
         }
