@@ -17,17 +17,22 @@ MemoryManager::Segment::Segment (bool filled, int address, int size, Segment* ne
 }
 
 MemoryManager::~MemoryManager () {
-    std::array<Segment*, 2> segmentsList = {segmentsBegin, segmentsUserBegin};
+    std::vector<Segment*> segmentsList = {segmentsBegin, segmentsUserBegin};
     Segment* currentSegment,* nextSegment;
 
-    for (auto& firstSegment: segmentsList) {
-        currentSegment = firstSegment;
-        do {
-            nextSegment = currentSegment->nextSegment;
-            delete(currentSegment);
-        } while (nextSegment != nullptr);
+    currentSegment = segmentsList.front();
+    segmentsList.erase(segmentsList.begin());
+
+    while (currentSegment != nullptr) {
+        nextSegment = currentSegment->nextSegment;
+        delete(currentSegment);
+        currentSegment = nextSegment;
+
+        if ((currentSegment == nullptr) and (not segmentsList.empty())) {
+            currentSegment = segmentsList.front();
+            segmentsList.erase(segmentsList.begin());
+        }
     }
-    segmentsBegin = segmentsUserBegin = nullptr;
 }
 
 int MemoryManager::GetFreeSegment (Segment* firstSegment, int blocksCount) {
@@ -64,16 +69,20 @@ int MemoryManager::GetFreeSegment (Segment* firstSegment, int blocksCount) {
     return -1;
 }
 
-void MemoryManager::Allocate (Process* process) {
+int MemoryManager::Allocate (Process* process) {
     int priority = process->getPriority();
     int blocksCount = process->getAllocMemBlocks();
 
     // se for processo em tempo real, procura segmento livre nos primeiros 64 blocos
     if (priority == 0)
         process->pid = GetFreeSegment(segmentsBegin, blocksCount);
+
     // se for processo de usuario, procura a partir do bloco 64
-    else
-        process->pid = GetFreeSegment(segmentsUserBegin, blocksCount);
+    else process->pid = GetFreeSegment(segmentsUserBegin, blocksCount);
+
+    if (process->pid != -1)
+        return processesTable[process->pid].first;
+    return -1;
 }
 
 bool MemoryManager::Deallocate (int pid) {

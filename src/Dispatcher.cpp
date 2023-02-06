@@ -2,7 +2,7 @@
 
 int Dispatcher::clock = 0;
 std::vector<Process> Dispatcher::instantiatedProcesses;
-std::vector<std::pair<int, Process>> Dispatcher::logProcesses;
+std::vector<std::tuple<int, Process, int>> Dispatcher::logProcesses;
 std::vector<std::pair<int, Operation>> Dispatcher::logOperations;
 
 void Dispatcher::Start (
@@ -25,7 +25,7 @@ void Dispatcher::Start (
             do {
                 Process newProcess = *it;
                 if (newProcess.getInitTime() <= clock) {
-                    memoryManager->Allocate(&newProcess);
+                    int newProcessAddress = memoryManager->Allocate(&newProcess);
 
                     // se conseguiu alocar memoria, processo eh criado
                     if (newProcess.getPid() != -1){
@@ -42,9 +42,9 @@ void Dispatcher::Start (
                                 newProcess.insertOperation(&op);
                             }
                         processesManager->insertProcess(newProcess);
-                        logProcesses.push_back(std::make_pair(clock, newProcess));
-                        it = instantiatedProcesses.erase(instantiatedProcesses.begin());
 
+                        logProcesses.push_back(std::make_tuple(clock, newProcess, newProcessAddress));
+                        it = instantiatedProcesses.erase(instantiatedProcesses.begin());
                     } else it++;
                 } else break;
             } while (it != instantiatedProcesses.end());
@@ -64,5 +64,29 @@ void Dispatcher::Start (
 }
 
 void Dispatcher::PrintLog () {
+    for (auto& log_p: logProcesses) {
+        Process& process = std::get<1>(log_p);
+        std::cout << "dispatcher at time" << std::get<0>(log_p) << " =>\n";
+        std::cout << "\tPID: " << process.getPid() << "\n";
+        std::cout << "\toffset: " << std::get<2>(log_p) << "\n";
+        std::cout << "\tblocks: " << process.getAllocMemBlocks() << "\n";
+        std::cout << "\tpriority: " << process.getPriority() << "\n";
+        std::cout << "\ttime: " << process.getExecTime() << "\n";
+        std::cout << "\tprinter: " << process.getPrinterCode() << "\n";
+        std::cout << "\tscanner: " << process.getScanReq() << "\n";
+        std::cout << "\tmodem: " << process.getModemReq() << "\n";
+        std::cout << "\tdrive: " << process.getDiskNum();
+        std::cout << std::endl << std::endl;
 
+        // std::cout << "process " << process.getPid() << " =>\n";
+        // std::cout << "\tP" << process.getPid() << "STARTED\n";
+        // std::sort(logOperations.begin(), logOperations.end(),
+        // [&](std::pair<int, Operation> A, std::pair<int, Operation> B) {
+        //     return (A.second.getId() < B.second.getId());
+        // });
+        // int lastOperationId = 0;
+        // for (auto& log_o: logOperations) {
+        //     std::cout << "\tP" << process.getPid() << " instruction " << 
+        // }
+    }
 }

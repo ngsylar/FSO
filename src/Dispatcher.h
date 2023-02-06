@@ -14,7 +14,7 @@ class Dispatcher {
         static int clock;
 
         // logs
-        static std::vector<std::pair<int, Process>> logProcesses;
+        static std::vector<std::tuple<int, Process, int>> logProcesses;
         static std::vector<std::pair<int, Operation>> logOperations;
 
     public:
