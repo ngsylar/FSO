@@ -1,4 +1,4 @@
-# FSO: PSEUDO-SO
+# FSO: Pseudo-SO
 UnB :: Fundamentos de Sistemas Operacionais :: 2022/2
 
 Pseudo-SO escrito em C++
