@@ -1,0 +1,2 @@
+-> logica para processos que pedem mais memoria que a quantidade total disponivel (processos impossiveis)
+-> identificar previamente no Parser operacoes referentes aos processos impossiveis (talvez desnecessario)
